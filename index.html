@@ -260,6 +260,10 @@
   .rectbl td .rcsh+span,.rectbl td.r .pct{color:var(--faint);font-size:11px;margin-left:2px;}
   .rco{font-weight:700;}
   .rclink{background:none;border:none;color:var(--blue);font-weight:700;font-size:11.5px;cursor:pointer;font-family:inherit;padding:4px 0 0;}
+  .daseg{display:flex;gap:8px;margin-top:4px;}
+  .daopt{flex:1;border:1px solid var(--line);background:#fff;border-radius:10px;padding:10px;font-size:13px;font-weight:700;color:var(--ink2);cursor:pointer;font-family:inherit;}
+  .daopt:hover{border-color:var(--cyan);background:var(--cyanbg);}
+  .daopt.sel{border-color:var(--cyandk);background:var(--cyanbg);color:var(--cyandk);}
   .rsum{margin-top:9px;font-size:12.5px;line-height:1.55;color:var(--ink2);}
   .segwrap{overflow-x:auto;margin-top:4px;border:1px solid var(--line);border-radius:10px;}
   .segtbl{border-collapse:collapse;font-size:12px;white-space:nowrap;min-width:100%;}
@@ -616,14 +620,14 @@ function renderCampaignDetail(c){
  const h=`<div class="detcard">
    <div class="dt"><span class="cdot"></span>${c.name}</div>
    <div class="dethead">
-     <div class="hm"><div class="k">Total leads</div><div class="v">${c.total.toLocaleString()}</div></div>
-     <div class="hm"><div class="k">Dialed leads</div><div class="v">${(c.dialled||0).toLocaleString()}</div><div class="s">${started?cov+'% of leads':'not started'}</div></div>
-     <div class="hm"><div class="k">Connected leads</div><div class="v">${(c.connected||0).toLocaleString()}</div><div class="s">${started?conn+'% of dialed':'—'}</div></div>
+     <div class="hm"><div class="k">Total records</div><div class="v">${c.total.toLocaleString()}</div></div>
+     <div class="hm"><div class="k">Attempted records</div><div class="v">${(c.dialled||0).toLocaleString()}</div><div class="s">${started?cov+'% of records':'not started'}</div></div>
+     <div class="hm"><div class="k">Connected records</div><div class="v">${(c.connected||0).toLocaleString()}</div><div class="s">${started?conn+'% of attempted':'—'}</div></div>
    </div>
    <div class="detgrid">
-     <div class="detm"><div class="k">${I.spark} Fresh leads</div><div class="v">${d.fresh.toLocaleString()}</div><div class="s2">not yet dialed</div></div>
-     <div class="detm"><div class="k">${I.refresh} Retried leads</div><div class="v">${d.retried.toLocaleString()}</div><div class="s2">re-attempted</div></div>
-     <div class="detm"><div class="k">${I.people} Available agents</div><div class="v">${d.avail} <span class="s">of ${d.online} online</span></div></div>
+     <div class="detm"><div class="k">${I.spark} Fresh calls</div><div class="v">${d.fresh.toLocaleString()}</div><div class="s2">not yet attempted</div></div>
+     <div class="detm"><div class="k">${I.refresh} Records retried</div><div class="v">${d.retried.toLocaleString()}</div><div class="s2">re-attempted</div></div>
+     <div class="detm"><div class="k">${I.people} Available agent</div><div class="v">${d.avail} <span class="s">of ${d.online} online</span></div></div>
      <div class="detm"><div class="k">${I.dialer} Dialer profile</div><div class="v" style="font-size:15px">${d.prof}</div></div>
    </div>
  </div>`;
@@ -663,11 +667,12 @@ async function showSegments(c){
  await botMsg(`${c.name} has ${segs.length} segments. Here they are with status, reach and operational detail. Tap Telephony on any row to scope an action to that segment.`);
  const rows=segs.map((s,i)=>{
    const cov=s.total?Math.round(s.dialled/s.total*100):0, conn=s.dialled?Math.round(s.connected/s.dialled*100):0;
+   const sched=s.fresh+s.retried;
    return `<tr>
      <td class="sgn" title="${s.name}">${s.name}</td>
      <td><span class="pill ${s.status.toLowerCase()}">${s.status}</span></td>
-     <td class="r">${s.reach}%</td>
      <td class="r">${s.total.toLocaleString()}</td>
+     <td class="r">${sched.toLocaleString()}</td>
      <td class="r">${s.dialled.toLocaleString()}<span class="mut"> · ${cov}%</span></td>
      <td class="r">${s.connected.toLocaleString()}<span class="mut"> · ${conn}%</span></td>
      <td class="r">${s.fresh.toLocaleString()}</td>
@@ -679,15 +684,15 @@ async function showSegments(c){
      <td>${s.plan}</td>
      <td class="r">${s.supp.toLocaleString()}</td>
      <td>${s.skill}</td>
-     <td><button class="telebtn" data-i="${i}">${I.phone} Telephony ›</button></td>
+     <td><button class="telebtn" data-i="${i}">${I.phone} Rechurn ›</button></td>
    </tr>`;
  }).join('');
  const el=botBlock(`<div class="seglabel">Segment-wise detail · ${segs.length} segments</div>
    <div class="segwrap"><table class="segtbl">
-   <thead><tr><th>Segment</th><th>Status</th><th class="r">Reach</th><th class="r">Total</th><th class="r">Dialed</th><th class="r">Connected</th><th class="r">Fresh</th><th class="r">Retried</th><th class="r">Agents</th><th>Dialer</th><th>Business hrs</th><th class="r">Inflight</th><th>Dial plan</th><th class="r">Suppression</th><th>Skill</th><th></th></tr></thead>
+   <thead><tr><th>Segment</th><th>Status</th><th class="r">Total records</th><th class="r">Total calls scheduled</th><th class="r">Attempted records</th><th class="r">Connected records</th><th class="r">Fresh calls</th><th class="r">Records retried</th><th class="r">Available agent</th><th>Dialer</th><th>Business hrs</th><th class="r">Inflight calls</th><th>Dial plan</th><th class="r">Suppressed records</th><th>Skill</th><th></th></tr></thead>
    <tbody>${rows}</tbody></table></div>`);
  el.classList.add('wide');
- el.querySelectorAll('.telebtn').forEach(b=>{ b.onclick=()=>{ if(cpBusy)return; runTelephony(scopeMeta(segs[+b.dataset.i],true)); }; });
+ el.querySelectorAll('.telebtn').forEach(b=>{ b.onclick=()=>{ if(cpBusy)return; runRechurnEntry(scopeMeta(segs[+b.dataset.i],true)); }; });
  cpBusy=false; refocus();
 }
 // normalize a campaign or segment into a single scope object for telephony actions
@@ -711,10 +716,54 @@ function telephony(m){
 function whenLabel(h){return h===null?'No retry':h<1?'+30 min':('+'+h+' hrs');}
 const PACING=2.5; let rcSeq=0;
 
-async function runTelephony(m){
+// recommended rechurn share per telephony outcome (matches the Recommendation card)
+const RECSHARE={voicemail:50,busy:100,drop:80,noans:70,invalid:0};
+function twoOpts(m,onReco,onRechurn){
+ const w=document.createElement('div');w.className='btnrow';w.style.marginTop='6px';
+ const r1=document.createElement('button');r1.className='btn go';r1.textContent='Recommendation';r1.onclick=()=>{if(cpBusy)return;onReco();};
+ const r2=document.createElement('button');r2.className='btn alt';r2.textContent='Rechurn Action';r2.onclick=()=>{if(cpBusy)return;onRechurn();};
+ w.appendChild(r1);w.appendChild(r2);body.appendChild(w);scroll();
+}
+function telRows(t){return t.rows.map(r=>({key:r.key,label:r.label,count:r.count,meta:whenLabel(r.retryHrs),rec:(RECSHARE[r.key]!=null?RECSHARE[r.key]:60),noRetry:r.retryHrs===null,optOut:false}));}
+// connected-call dispositions; candidates for retry by a supervisor / higher-skill agent
+function disposition(m){
+ const cn=m.connected||0, mk=p=>Math.round(cn*p);
+ const rows=[
+  {key:'callback',label:'Callback requested',count:mk(0.22),route:'Senior agent',rec:80},
+  {key:'interested',label:'Interested, needs follow-up',count:mk(0.16),route:'Senior agent',rec:70},
+  {key:'supervisor',label:'Requested supervisor',count:mk(0.08),route:'Supervisor',rec:100},
+  {key:'pricing',label:'Pricing objection',count:mk(0.14),route:'Supervisor',rec:60},
+  {key:'wrongdm',label:'Not decision maker',count:mk(0.12),route:'Senior agent',rec:50},
+  {key:'lead',label:'Lead generated',count:mk(0.18),route:'No retry',rec:0,optOut:true}
+ ];
+ const used=rows.reduce((a,r)=>a+r.count,0);
+ rows.push({key:'dnc',label:'Do not call',count:Math.max(0,cn-used),route:'Suppress',rec:0,noRetry:true});
+ return{cn,rows};
+}
+function dispRows(d){return d.rows.map(r=>({key:r.key,label:r.label,count:r.count,meta:r.route,rec:r.rec,noRetry:!!r.noRetry,optOut:!!r.optOut}));}
+
+// entry point: pick the derived attribute (Telephony / Disposition)
+async function runRechurnEntry(m){
  if(cpBusy)return;cpBusy=true;
  setScope('Scope: '+m.name+(m.kind==='segment'?' (segment)':''));
- userMsg('Telephony action · '+m.name);
+ userMsg('Rechurn · '+m.name);
+ await typing();await botMsg(`Rechurn on ${m.name}. Pick the derived attribute to work from.`);
+ const id='da'+(rcSeq++);
+ const DESC={
+  telephony:'Telephony outcome is the call result reported by the dialer and the carrier network. It explains why a call did or did not connect, for example busy, no answer, voicemail or invalid number. These outcomes decide which numbers are eligible for an automatic retry.',
+  disposition:'Disposition is the wrap up code an agent sets after a connected call. It records what happened in the conversation, for example interested, callback requested, not interested or lead generated. It reflects the human outcome of the call, not the line status.'
+ };
+ const el=botBlock(`<div class="wdg" id="${id}"><div class="wt">Derived attribute</div>
+   <div class="daseg"><button class="daopt" data-v="telephony">Telephony</button><button class="daopt" data-v="disposition">Disposition</button></div>
+   <div class="rsum dadesc">Select Telephony or Disposition to see what it works from.</div></div>`);
+ el.classList.add('wide');
+ const root=el.querySelector('#'+id);
+ root.querySelectorAll('.daopt').forEach(b=>{ b.onclick=()=>{ if(cpBusy)return; root.querySelectorAll('.daopt').forEach(x=>x.classList.remove('sel')); b.classList.add('sel'); root.querySelector('.dadesc').textContent=DESC[b.dataset.v]; if(b.dataset.v==='disposition')showDisposition(m); else showTelephony(m); }; });
+ cpStage=9;cpBusy=false;refocus();
+}
+
+async function showTelephony(m){
+ if(cpBusy)return;cpBusy=true;
  await typing();await toolCall("Campaign Monitoring","reads telephony outcomes "+(m.kind==='segment'?'for this segment':'for this campaign'));
  const t=telephony(m);
  const rowsHtml=t.rows.map(r=>`<tr><td class="rl">${r.label}</td><td class="r">${r.count.toLocaleString()}</td><td class="r mut">${t.nc?Math.round(r.count/t.nc*100):0}%</td></tr>`).join('');
@@ -722,10 +771,7 @@ async function runTelephony(m){
   <table class="rectbl"><tr><th>Outcome</th><th class="r">Calls</th><th class="r">Share</th></tr>${rowsHtml}
   <tr><td class="rl">Total not connected</td><td class="r">${t.nc.toLocaleString()}</td><td class="r mut">100%</td></tr></table></div>`).classList.add('wide');
  await botMsg(`${t.nc.toLocaleString()} calls didn't connect on ${m.name}. Want my recommendation on what to rechurn, or do you want to set the rechurn yourself?`);
- const w=document.createElement('div');w.className='btnrow';w.style.marginTop='6px';
- const r1=document.createElement('button');r1.className='btn go';r1.textContent='Recommendation';r1.onclick=()=>{if(cpBusy)return;runReco(m,t);};
- const r2=document.createElement('button');r2.className='btn alt';r2.textContent='Rechurn Action';r2.onclick=()=>{if(cpBusy)return;runRechurn(m,t);};
- w.appendChild(r1);w.appendChild(r2);body.appendChild(w);scroll();
+ twoOpts(m, ()=>runReco(m,t), ()=>openRechurn(m,telRows(t),false,'telephony'));
  cpStage=9;cpBusy=false;refocus();
 }
 
@@ -747,54 +793,86 @@ async function runReco(m,t){
   <table class="rectbl"><tr><th>Outcome</th><th class="r">Calls</th><th>Retry rule</th><th>Recommend</th></tr>${rowsHtml}</table>
   <div class="rsum"><b>Why:</b> dialer is ${m.prof} at ${PACING}:1 pacing with ${m.avail} agents available, roughly ${cap.toLocaleString()} dial attempts an hour. Busy redials after 30 minutes, a short window, so rechurn all of those now. Call drop and no answer redial after 2 hours, so push most of them now. Voicemail redials after 5 hours, so rechurn about half now and let the strategy pick up the rest. Invalid numbers have no retry rule, so suppress them. At ${cap.toLocaleString()} an hour, the ${recNow.toLocaleString()} priority retries clear in roughly ${clear} hours.</div></div>`).classList.add('wide');
  const w=document.createElement('div');w.className='btnrow';w.style.marginTop='6px';
- const a1=document.createElement('button');a1.className='btn go';a1.textContent='Apply as Rechurn Action';a1.onclick=()=>{if(cpBusy)return;runRechurn(m,t);};
+ const a1=document.createElement('button');a1.className='btn go';a1.textContent='Apply as Rechurn Action';a1.onclick=()=>{if(cpBusy)return;openRechurn(m,telRows(t),true,'telephony');};
  w.appendChild(a1);body.appendChild(w);scroll();
  cpBusy=false;refocus();
 }
 
-// recommended rechurn share per outcome (matches the Recommendation card)
-const RECSHARE={voicemail:50,busy:100,drop:80,noans:70,invalid:0};
-function runRechurn(m,t){
+async function showDisposition(m){
+ if(cpBusy)return;cpBusy=true;
+ await typing();await toolCall("Campaign Monitoring","reads connected-call dispositions "+(m.kind==='segment'?'for this segment':'for this campaign'));
+ const d=disposition(m);
+ const rowsHtml=d.rows.map(r=>`<tr><td class="rl">${r.label}</td><td class="r">${r.count.toLocaleString()}</td><td>${r.route}</td><td class="r mut">${d.cn?Math.round(r.count/d.cn*100):0}%</td></tr>`).join('');
+ botBlock(`<div class="wdg"><div class="wt">Connected-call dispositions · ${m.kind}: ${m.name}</div>
+  <table class="rectbl"><tr><th>Disposition</th><th class="r">Calls</th><th>Retry route</th><th class="r">Share</th></tr>${rowsHtml}</table>
+  <div class="rsum">These connected calls could get a better outcome on a retry by a supervisor or a higher skilled agent. Lead generated and Do not call are left out by default, lead generated is already a success and do not call is a compliance block.</div></div>`).classList.add('wide');
+ await botMsg(`${d.cn.toLocaleString()} connected calls have a disposition on ${m.name}. Want my recommendation on which to retry, or set the rechurn yourself?`);
+ twoOpts(m, ()=>dispoReco(m,d), ()=>openRechurn(m,dispRows(d),false,'disposition'));
+ cpStage=9;cpBusy=false;refocus();
+}
+
+async function dispoReco(m,d){
+ if(cpBusy)return;cpBusy=true;userMsg('Recommendation');
+ await typing();await toolCall("Skill & routing","checks supervisor and senior-agent fit for "+m.name);
+ const rowsHtml=d.rows.map(r=>{
+   if(r.noRetry)return`<tr><td class="rl mut">${r.label}</td><td class="r mut">${r.count.toLocaleString()}</td><td>${r.route}</td><td><span class="mut">do not retry</span><span class="recb no">block</span></td></tr>`;
+   if(r.optOut)return`<tr><td class="rl">${r.label}</td><td class="r">${r.count.toLocaleString()}</td><td>${r.route}</td><td><span class="mut">hold</span><span class="recb no">success</span></td></tr>`;
+   const rec=Math.round(r.count*r.rec/100);
+   return`<tr><td class="rl">${r.label}</td><td class="r">${r.count.toLocaleString()}</td><td>${r.route}</td><td>${r.rec}% (${rec.toLocaleString()})<span class="recb go">retry</span></td></tr>`;
+ }).join('');
+ botBlock(`<div class="wdg"><div class="wt">Recommendation · connected dispositions · ${m.name}</div>
+  <table class="rectbl"><tr><th>Disposition</th><th class="r">Calls</th><th>Retry route</th><th>Recommend</th></tr>${rowsHtml}</table>
+  <div class="rsum"><b>Why:</b> supervisor-requested calls have the highest lift, route all of those to a supervisor. Callbacks and interested leads close better with a senior agent, so retry most of them. Pricing objections and wrong-contact calls have lower lift, retry about half with a senior agent. Lead generated is already a win so it is held back, and do not call is a compliance block. Tell me if you want lead generated included.</div></div>`).classList.add('wide');
+ const w=document.createElement('div');w.className='btnrow';w.style.marginTop='6px';
+ const a1=document.createElement('button');a1.className='btn go';a1.textContent='Apply as Rechurn Action';a1.onclick=()=>{if(cpBusy)return;openRechurn(m,dispRows(d),true,'disposition');};
+ w.appendChild(a1);body.appendChild(w);scroll();
+ cpBusy=false;refocus();
+}
+
+// generalized rechurn builder: telephony or disposition rows
+// fromReco=false -> shares default to 100; fromReco=true -> shares default to the recommended values
+function openRechurn(m,rows,fromReco,mode){
  if(cpBusy)return;cpBusy=true;userMsg('Rechurn Action');
  (async()=>{
-  await typing();await toolCall("Manage Leads","prepares rechurn by telephony outcome",true);
+  await typing();await toolCall("Manage Leads","prepares rechurn by "+(mode==='disposition'?'disposition':'telephony outcome'),true);
   const id='rc'+(rcSeq++);
-  const rowsHtml=t.rows.map(r=>{
-    const noRetry=r.retryHrs===null, rec=RECSHARE[r.key]!=null?RECSHARE[r.key]:60;
-    return `<tr data-key="${r.key}" data-n="${r.count}">
-     <td><input type="checkbox" class="rcck" ${noRetry?'disabled':'checked'}></td>
-     <td class="rl${noRetry?' mut':''}">${r.label}</td>
-     <td class="r${noRetry?' mut':''}">${r.count.toLocaleString()}</td>
-     <td class="mut">${whenLabel(r.retryHrs)}</td>
-     <td class="r"><input type="number" class="rcsh" min="0" max="100" step="5" value="${rec}" ${noRetry?'disabled':''}><span class="pct">%</span></td>
-     <td class="r rco">0</td></tr>`;
+  const metaHdr=mode==='disposition'?'Retry route':'Retry rule';
+  const colHdr=mode==='disposition'?'Disposition':'Outcome';
+  const rowsHtml=rows.map(r=>{
+    const off=r.noRetry, defShare=off?0:(fromReco?r.rec:100), checked=!off&&!r.optOut;
+    return `<tr data-key="${r.key}" data-n="${r.count}" data-rec="${r.rec}" data-off="${off?1:0}" data-optout="${r.optOut?1:0}">
+      <td><input type="checkbox" class="rcck" ${off?'disabled':(checked?'checked':'')}></td>
+      <td class="rl${off?' mut':''}">${r.label}</td>
+      <td class="r${off?' mut':''}">${r.count.toLocaleString()}</td>
+      <td class="mut">${r.meta}</td>
+      <td class="r"><input type="number" class="rcsh" min="0" max="100" step="5" value="${defShare}" ${off?'disabled':''}><span class="pct">%</span></td>
+      <td class="r rco">0</td></tr>`;
   }).join('');
-  const el=botBlock(`<div class="wdg" id="${id}"><div class="wt">Rechurn action · ${m.kind}: ${m.name}</div>
-   <table class="rectbl"><tr><th></th><th>Outcome</th><th class="r">Calls</th><th>Retry rule</th><th class="r">Share</th><th class="r">Rechurn</th></tr>${rowsHtml}</table>
+  const el=botBlock(`<div class="wdg" id="${id}"><div class="wt">Rechurn action · ${mode} · ${m.kind}: ${m.name}</div>
+   <table class="rectbl"><tr><th></th><th>${colHdr}</th><th class="r">Calls</th><th>${metaHdr}</th><th class="r">Share</th><th class="r">Rechurn</th></tr>${rowsHtml}</table>
    <button class="rclink rcreset">Reset to recommended</button>
-   <div class="rcctl"><label>Reschedule</label><select class="rcwhen"><option>Per retry strategy</option><option>Now</option><option>+30 min</option><option>+2 hours</option><option>+5 hours</option><option>Today 6 PM</option></select></div>
+   <div class="rcctl"><label>Reschedule</label><select class="rcwhen"><option>Now</option><option>Per retry strategy</option><option>+30 min</option><option>+2 hours</option><option>+5 hours</option><option>Today 6 PM</option></select></div>
    <div class="rcout">Will rechurn <b class="rccount">0</b> calls <span class="rcreach"></span></div>
    <button class="btn go rcgo" style="margin-top:11px">Confirm rechurn</button></div>`);
   el.classList.add('wide');
   const root=el.querySelector('#'+id);
   const trs=[...root.querySelectorAll('tr[data-key]')];
   const out=root.querySelector('.rccount'), reach=root.querySelector('.rcreach'), whenSel=root.querySelector('.rcwhen');
-  const dialled=m.dialled||0;
+  const base=mode==='disposition'?(m.connected||0):(m.dialled||0), baseLbl=mode==='disposition'?'connected':'dialled';
   function recompute(){
    let sum=0;
    trs.forEach(tr=>{
-    const ck=tr.querySelector('.rcck'), sh=tr.querySelector('.rcsh');
-    let v=0;
+    const ck=tr.querySelector('.rcck'), sh=tr.querySelector('.rcsh');let v=0;
     if(ck&&ck.checked&&sh&&!sh.disabled){const p=Math.max(0,Math.min(100,+sh.value||0));v=Math.round((+tr.dataset.n)*p/100);}
     tr.querySelector('.rco').textContent=v.toLocaleString();sum+=v;
    });
    out.textContent=sum.toLocaleString();
-   reach.textContent=dialled?'· '+(Math.round(sum/dialled*1000)/10)+'% of dialled':'';
+   reach.textContent=base?'· '+(Math.round(sum/base*1000)/10)+'% of '+baseLbl:'';
    return sum;
   }
-  root.querySelectorAll('.rcsh').forEach(i=>i.oninput=recompute);
+  root.querySelectorAll('.rcsh').forEach(i=>i.oninput=()=>{ if(+i.value>100)i.value=100; if(+i.value<0)i.value=0; recompute(); });
   root.querySelectorAll('.rcck').forEach(c=>c.onchange=recompute);
-  root.querySelector('.rcreset').onclick=()=>{trs.forEach(tr=>{const sh=tr.querySelector('.rcsh'),ck=tr.querySelector('.rcck');if(sh&&!sh.disabled)sh.value=(RECSHARE[tr.dataset.key]!=null?RECSHARE[tr.dataset.key]:60);if(ck&&!ck.disabled)ck.checked=true;});recompute();};
+  root.querySelector('.rcreset').onclick=()=>{trs.forEach(tr=>{const off=tr.dataset.off==='1',sh=tr.querySelector('.rcsh'),ck=tr.querySelector('.rcck');if(sh&&!off)sh.value=tr.dataset.rec;if(ck&&!off)ck.checked=(tr.dataset.optout!=='1');});recompute();};
   recompute();
   root.querySelector('.rcgo').onclick=async()=>{
    if(cpBusy)return;cpBusy=true;
@@ -802,8 +880,8 @@ function runRechurn(m,t){
    const picked=trs.filter(tr=>{const ck=tr.querySelector('.rcck'),sh=tr.querySelector('.rcsh');return ck&&ck.checked&&sh&&!sh.disabled&&(+sh.value>0);}).map(tr=>tr.dataset.key+' '+tr.querySelector('.rcsh').value+'%');
    rechurned.add(chosen.name);renderCampaigns();
    showToast('Rechurn '+(when==='Now'?'started':'scheduled')+' · '+sum.toLocaleString()+' calls · '+m.name);
-   await botMsg(`Done. ${sum.toLocaleString()} calls on ${m.name} queued to rechurn by outcome (${picked.join(', ')}), schedule: ${when}. Captured in the campaign audit trail.`);
-   addAuditCard({what:`Rechurn · ${sum.toLocaleString()} calls · ${m.name} · ${picked.join(', ')}`,who:'Ajay Gaur · via Campaign Copilot',when:when==='Now'?'just now':when});
+   await botMsg(`Done. ${sum.toLocaleString()} calls on ${m.name} queued to rechurn by ${mode} (${picked.join(', ')}), schedule: ${when}. Captured in the campaign audit trail.`);
+   addAuditCard({what:`Rechurn · ${mode} · ${sum.toLocaleString()} calls · ${m.name} · ${picked.join(', ')}`,who:'Ajay Gaur · via Campaign Copilot',when:when==='Now'?'just now':when});
    const g=root.querySelector('.rcgo');g.disabled=true;g.textContent='Rechurn submitted';g.style.opacity='.6';
    cpBusy=false;refocus();
   };
@@ -815,8 +893,8 @@ function campOptions(c){
  const w=document.createElement('div'); w.className='btnrow'; w.style.marginTop='6px';
  const b1=document.createElement('button'); b1.className='btn go'; b1.textContent='Show segment details';
  b1.onclick=()=>{ if(cpBusy)return; showSegments(c); };
- const b2=document.createElement('button'); b2.className='btn alt'; b2.textContent='Telephony Action';
- b2.onclick=()=>{ if(cpBusy)return; runTelephony(scopeMeta(c,false)); };
+ const b2=document.createElement('button'); b2.className='btn alt'; b2.textContent='Rechurn';
+ b2.onclick=()=>{ if(cpBusy)return; runRechurnEntry(scopeMeta(c,false)); };
  w.appendChild(b1); w.appendChild(b2); body.appendChild(w); scroll();
 }
 async function chooseCampaign(c){if(cpBusy||cpStage!==1)return;cpBusy=true;chosen=c;setScope('Scope: '+c.name);userMsg(c.name);await typing();await toolCall("Reporting fetch","reads campaign detail for "+c.name);renderCampaignDetail(c);await botMsg(`Here's where ${c.name} stands right now. Pick an option below, or tell me what to do.`);cpStage=2;campOptions(c);cpBusy=false;refocus();}
