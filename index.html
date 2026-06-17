@@ -110,7 +110,7 @@
   .rpill{display:inline-block;margin-left:8px;background:#fff3df;color:#b9760a;font-size:10px;font-weight:800;padding:2px 7px;border-radius:5px;vertical-align:middle;}
 
   /* ===== call widget ===== */
-  .callw{position:fixed;left:11px;bottom:11px;width:258px;background:#1c2330;color:#e7edf3;border-radius:12px;padding:9px;font-size:12px;z-index:25;box-shadow:0 12px 32px rgba(0,0,0,.28);}
+  .callw{display:none;position:fixed;left:11px;bottom:11px;width:258px;background:#1c2330;color:#e7edf3;border-radius:12px;padding:9px;font-size:12px;z-index:25;box-shadow:0 12px 32px rgba(0,0,0,.28);}
   .callw .row{display:flex;align-items:center;gap:8px;padding:5px 4px;}
   .callw svg{width:14px;height:14px;}
   .callw .grip{color:#586577;}.callw .grip svg{width:11px;height:16px;}
@@ -156,9 +156,9 @@
 
   /* ===== Sprinklr Copilot landing ===== */
   .cp-landing{flex:1 1 auto;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:14px;padding:18px;background:transparent;}
-  .cp-greet{display:flex;align-items:center;gap:12px;}
-  .cp-greet .cp-mark{width:34px;height:34px;}
-  .cp-greet .gt{text-align:left;}
+  .cp-greet{display:flex;flex-direction:column;align-items:center;gap:8px;}
+  .cp-greet .cp-mark{width:38px;height:38px;}
+  .cp-greet .gt{text-align:center;}
   .cp-greet .hi{font-size:18px;color:var(--ink);font-weight:400;line-height:1.35;}
   .cp-greet .q{font-size:18px;color:var(--ink2);font-weight:700;line-height:1.3;}
   .cp-sugs{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;max-width:360px;}
@@ -166,9 +166,9 @@
   .sug{background:#fff;border:1px solid var(--line);border-radius:32px;padding:8px 18px;font-size:13px;font-weight:500;color:var(--ink2);cursor:pointer;font-family:inherit;box-shadow:0 1px 2px rgba(15,23,34,.04);}
   .sug:hover{border-color:#d4d9e0;background:#fcfdfe;}
   .sug.more{color:var(--muted);display:inline-flex;align-items:center;gap:5px;}
-  .cp-greet .hi{font-size:21px;font-weight:500;color:var(--ink);line-height:1.25;}
+  .cp-greet .hi{font-size:30px;font-weight:500;color:var(--ink);line-height:1.2;}
   .cp-greet .hi b{font-weight:800;background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;}
-  .cp-greet .q{font-size:15.5px;font-weight:700;color:var(--ink2);line-height:1.25;margin-top:2px;}
+  .cp-greet .q{font-size:18px;font-weight:700;color:var(--ink2);line-height:1.3;margin-top:3px;}
   .cp-cards{display:grid;grid-template-columns:1fr 1fr;gap:9px;width:100%;max-width:540px;}
   .cpcard{text-align:left;background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 11px;cursor:pointer;font-family:inherit;box-shadow:0 1px 2px rgba(15,23,34,.04);display:flex;flex-direction:column;gap:5px;transition:transform .12s,box-shadow .12s,border-color .12s;}
   .cpcard:hover{border-color:#d4d9e0;box-shadow:0 6px 18px rgba(15,23,34,.09);transform:translateY(-1px);}
@@ -367,7 +367,6 @@
   <div class="drawer" id="drawer">
     <div class="cp-head">
       <button class="cphome" id="cophome" aria-label="Home" title="Home"><svg viewBox="0 0 24 24"><path d="M4 11l8-7 8 7M6 10v9h12v-9"/></svg></button>
-      <div class="cp-mark"><svg viewBox="0 0 14 14"><path d="M5.878 14.01a2.977 2.977 0 0 0 2.969-2.986A2.977 2.977 0 0 0 5.878 8.04a2.977 2.977 0 0 0-2.968 2.985 2.977 2.977 0 0 0 2.968 2.985" fill="#70BF54"/><path d="M9.89 7.815c2.145 0 3.885-1.75 3.885-3.908S12.035 0 9.889 0 6.004 1.75 6.004 3.907s1.74 3.908 3.885 3.908" fill="#09BAE9"/><path d="M2.512 7.675A2.36 2.36 0 0 0 4.866 5.31a2.36 2.36 0 0 0-2.354-2.367A2.36 2.36 0 0 0 .16 5.309a2.36 2.36 0 0 0 2.353 2.366" fill="#FAA21B"/></svg></div>
       <div><div class="t">Campaign Copilot</div><span class="ctx" id="cpctx">Scope: all campaigns</span></div>
       <button class="cpmax" id="copmax" aria-label="Maximize"><svg viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></button>
       <button class="cls" id="copclose">×</button>
@@ -1107,6 +1106,8 @@ function scopeMeta(sc,isSeg){
  if(isSeg)return{name:sc.name,total:sc.total,dialled:sc.dialled,connected:sc.connected,avail:sc.avail,prof:sc.prof,kind:'segment'};
  const d=campDetail(sc);return{name:sc.name,total:sc.total,dialled:sc.dialled,connected:sc.connected,avail:d.avail,prof:d.prof,kind:'campaign'};
 }
+// resolve a campaign by name from a plain prompt (open it directly), any stage
+function resolveCampByName(txt){const q=(txt||'').toLowerCase().trim();if(q.length<4)return null;return CATALOG.find(c=>q===c.name.toLowerCase())||CATALOG.find(c=>q.includes(c.name.toLowerCase()))||null;}
 // resolve a campaign or segment by name from free text (used by the "rechurn <name>" command)
 function resolveScope(txt){
  const q=(txt||'').replace(/rechurn/ig,'').replace(/\s+/g,' ').trim().toLowerCase();
@@ -1318,7 +1319,7 @@ function campOptions(c){
  b2.onclick=()=>{ if(cpBusy)return; runRechurnEntry(scopeMeta(c,false)); };
  w.appendChild(b1); w.appendChild(b2); body.appendChild(w); scroll();
 }
-async function chooseCampaign(c){if(cpBusy||cpStage!==1)return;cpBusy=true;chosen=c;setScope('Scope: '+c.name);userMsg(c.name);await typing();await toolCall("Reporting fetch","reads campaign detail for "+c.name);renderCampaignDetail(c);await botMsg(`Here's where ${c.name} stands right now. Pick an option below, or tell me what to do.`);cpStage=2;campOptions(c);cpBusy=false;refocus();}
+async function chooseCampaign(c){if(cpBusy)return;cpBusy=true;chosen=c;setScope('Scope: '+c.name);userMsg(c.name);await typing();await toolCall("Reporting fetch","reads campaign detail for "+c.name);renderCampaignDetail(c);await botMsg(`Here's where ${c.name} stands right now. Pick an option below, or tell me what to do.`);cpStage=2;campOptions(c);cpBusy=false;refocus();}
 async function stepReport(){const c=chosen,o=outcomes(c);await typing();await toolCall("Reporting fetch","reads lead-level data for "+c.name);await botMsg(`On ${c.name}: ${o.dialled.toLocaleString()} of ${c.total.toLocaleString()} leads dialled so far, ${o.connected.toLocaleString()} connected — a ${o.rate}% connect rate (connected of dialled). ${o.noConnect.toLocaleString()} dialled leads didn't connect.`);await typing();await toolCall("Reporting fetch","groups the "+o.noConnect.toLocaleString()+" leads by last telephony outcome");botWidget("Didn't connect · last telephony outcome",[{label:"Voicemail",val:o.voicemail,color:"#f59e0b"},{label:"Busy",val:o.busy,color:"#1250de"},{label:"Switched off / invalid",val:o.unreachable,color:"#c2ccd6"}]);await botMsg(`${o.voicemail.toLocaleString()} leads hit voicemail and ${o.busy.toLocaleString()} were busy, so ${o.eligible.toLocaleString()} leads are callable again. The ${o.unreachable.toLocaleString()} switched-off or invalid leads can't be rechurned, so I left them out.`);await botMsg("Basis: Campaign Monitoring, last telephony outcome.");guard(`Rechurning retries live leads, so I'll <b>confirm before I act</b>. Reply <b>rechurn</b> to retry all ${o.eligible.toLocaleString()} leads, or <b>schedule</b> for 6 PM.`);}
 async function stepRechurn(txt){const c=chosen,o=outcomes(c);const sched=/sched|later|6|pm|evening|tonight/i.test(txt);await typing();await toolCall("Rechurn · Manage Leads","retries the chosen leads by call outcome",true);rechurned.add(c.name);renderCampaigns();showToast("Rechurn "+(sched?"scheduled":"done")+" · "+o.eligible.toLocaleString()+" leads · captured in campaign audit trail");await botMsg(sched?`Scheduled. ${o.eligible.toLocaleString()} leads on ${c.name} will rechurn at 6 PM, set to Retry Scheduled. Captured in the campaign audit trail.`:`Done. ${o.eligible.toLocaleString()} leads on ${c.name} set to Retry Scheduled and rechurned by call outcome, voicemail and busy. Captured in the campaign audit trail.`);addAuditCard({what:`Rechurn · ${o.eligible.toLocaleString()} leads · ${c.name} · telephony outcome: voicemail, busy`,who:"Ajay Gaur · via Campaign Copilot",when:sched?"scheduled for 6:00 PM today":"just now"});botBlock('<div class="payoff"><b>From a question to done, in chat.</b><span class="small">The old way: open Manage Leads, filter by outcome, set the rechurn by hand.</span></div>');}
 async function send(){
@@ -1354,10 +1355,11 @@ async function send(){
    else await stepLeadSummary();
    cpStage=9; cpBusy=false; refocus(); return;
  }
- if(cpStage===0){userMsg(v||"Which campaigns are running right now?");inp.value='';cpBusy=true;await routeList(v,stepList);cpStage=1;cpBusy=false;refocus();return;}
- if(cpStage===1){if(!v)return;userMsg(v);inp.value='';cpBusy=true;await routeList(v,async()=>{await typing();await botMsg("Tap one of the campaigns above to pick it, or ask me to filter — for example, “show me all renewal campaigns”.");});cpBusy=false;refocus();return;}
- if(cpStage===2){userMsg(v||"Show me today's report");inp.value='';cpBusy=true;await stepReport();cpStage=3;cpBusy=false;refocus();return;}
- if(cpStage===3){const shown=v||"Rechurn the voicemail and busy leads";userMsg(shown);inp.value='';cpBusy=true;await stepRechurn(shown);cpStage=4;cpBusy=false;renderInput(true);const done=document.createElement('div');done.className='resetbar';done.style.marginTop='8px';const rb=document.createElement('button');rb.className='reset';rb.textContent='↻ Replay';rb.onclick=start;done.appendChild(rb);foot.appendChild(done);return;}
+ // any prompt, at any stage: open a named campaign if matched, otherwise search / list campaigns
+ const hitC=v?resolveCampByName(v):null;
+ if(hitC){ userMsg(v); inp.value=''; chooseCampaign(hitC); return; }
+ userMsg(v||"Which campaigns are running right now?"); inp.value='';
+ cpBusy=true; await routeList(v,stepList); cpStage=1; cpBusy=false; refocus(); return;
 }
 const cpSuggest=["Which campaigns are running right now?","Show me all renewal campaigns","List active dialling campaigns"];
 const cpDrill=["Give me the distribution of leads that are not connected per the telephony outcome"];
@@ -1375,7 +1377,7 @@ function start(){
   {k:'create',c:'c4',ic:'plus',tag:'Create',t:'New campaign',d:'Set up a campaign, pick the dialer profile and schedule, then add segments.'}
  ];
  const legend=[{c:'#ee5a47',t:'Ask in natural language'},{c:'#1250de',t:'Proactive alerts'},{c:'#1ba672',t:'Act inline'},{c:'#faa21b',t:'One-click rechurn'}];
- l.innerHTML=`<div class="cp-greet"><div class="cp-mark">${I.aimark}</div>`+
+ l.innerHTML=`<div class="cp-greet">`+
    `<div class="gt"><div class="hi">Hello, <b>Aman</b></div><div class="q">What would you like to analyse today?</div></div></div>`+
    `<div class="cp-cards">`+cards.map(c=>`<button class="cpcard ${c.c}" data-k="${c.k}"><div class="cphead"><div class="ci">${I[c.ic]}</div><span class="ctag">${c.tag}</span></div><div class="ct">${c.t}</div><div class="cd">${c.d}</div></button>`).join('')+`</div>`+
    `<div class="cp-legend">`+legend.map(g=>`<span class="leg"><i style="background:${g.c}"></i>${g.t}</span>`).join('')+`</div>`;
