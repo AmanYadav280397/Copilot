@@ -38,7 +38,7 @@
   .sess{display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:700;color:var(--ink);background:#f3f5f8;border-radius:7px;padding:5px 9px;white-space:nowrap;margin:0 2px;}
   .sess .t{color:var(--muted);font-weight:600;} .sess .voip{color:var(--green);}
   .sess svg{width:13px;height:13px;color:var(--green);}
-  .copbtn{display:flex;align-items:center;gap:6px;background:linear-gradient(135deg,#00bae9,#0f8fcc);color:#fff;border:none;border-radius:8px;padding:7px 11px;font-weight:800;font-size:12.5px;cursor:pointer;font-family:inherit;margin-left:4px;}
+  .copbtn{display:flex;align-items:center;gap:6px;background:var(--grad);color:#fff;border:none;border-radius:8px;padding:7px 11px;font-weight:800;font-size:12.5px;cursor:pointer;font-family:inherit;margin-left:4px;}
   .copbtn svg{width:14px;height:14px;stroke:#fff;}
   .copbtn.pulse{animation:pulse 1.9s infinite;}
   @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(0,186,233,.45);}70%{box-shadow:0 0 0 9px rgba(0,186,233,0);}100%{box-shadow:0 0 0 0 rgba(0,186,233,0);}}
@@ -136,6 +136,9 @@
   .cp-mark svg path{stroke:none;}
   .cp-head .t{font-weight:800;font-size:14px;}
   .cp-head .ctx{font-size:10.5px;color:var(--cyandk);font-weight:700;background:var(--cyanbg);padding:3px 8px;border-radius:999px;margin-top:3px;display:inline-block;}
+  .cp-head .cphome{width:30px;height:30px;border-radius:8px;border:none;background:var(--grad);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;flex:0 0 auto;margin-right:2px;box-shadow:0 2px 8px rgba(0,186,233,.28);}
+  .cp-head .cphome svg{width:16px;height:16px;stroke:#fff;}
+  .cp-head .cphome:hover{filter:brightness(.96);}
   .cp-head .cpmax{margin-left:auto;width:28px;height:28px;border-radius:7px;border:none;background:#f3f5f8;color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;}
   .cp-head .cpmax svg{width:15px;height:15px;}
   .cp-head .cpmax:hover{background:#e9edf2;color:var(--ink);}
@@ -152,7 +155,7 @@
   .cpinbar button:disabled{background:#e6e9ee;color:#aeb6c0;cursor:default;}
 
   /* ===== Sprinklr Copilot landing ===== */
-  .cp-landing{flex:1 1 auto;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:22px;padding:24px;background:transparent;}
+  .cp-landing{flex:1 1 auto;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:14px;padding:18px;background:transparent;}
   .cp-greet{display:flex;align-items:center;gap:12px;}
   .cp-greet .cp-mark{width:34px;height:34px;}
   .cp-greet .gt{text-align:left;}
@@ -163,6 +166,25 @@
   .sug{background:#fff;border:1px solid var(--line);border-radius:32px;padding:8px 18px;font-size:13px;font-weight:500;color:var(--ink2);cursor:pointer;font-family:inherit;box-shadow:0 1px 2px rgba(15,23,34,.04);}
   .sug:hover{border-color:#d4d9e0;background:#fcfdfe;}
   .sug.more{color:var(--muted);display:inline-flex;align-items:center;gap:5px;}
+  .cp-greet .hi{font-size:21px;font-weight:500;color:var(--ink);line-height:1.25;}
+  .cp-greet .hi b{font-weight:800;background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;}
+  .cp-greet .q{font-size:15.5px;font-weight:700;color:var(--ink2);line-height:1.25;margin-top:2px;}
+  .cp-cards{display:grid;grid-template-columns:1fr 1fr;gap:9px;width:100%;max-width:540px;}
+  .cpcard{text-align:left;background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 11px;cursor:pointer;font-family:inherit;box-shadow:0 1px 2px rgba(15,23,34,.04);display:flex;flex-direction:column;gap:5px;transition:transform .12s,box-shadow .12s,border-color .12s;}
+  .cpcard:hover{border-color:#d4d9e0;box-shadow:0 6px 18px rgba(15,23,34,.09);transform:translateY(-1px);}
+  .cphead{display:flex;align-items:center;justify-content:space-between;gap:8px;}
+  .cpcard .ci{width:25px;height:25px;border-radius:8px;display:flex;align-items:center;justify-content:center;background:var(--grad);color:#fff;flex:0 0 auto;}
+  .cpcard .ci svg{width:14px;height:14px;}
+  .cpcard .ctag{font-size:8px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;color:var(--faint);}
+  .cpcard.c2 .ci{background:var(--amberbg);color:#b9760a;} .cpcard.c3 .ci{background:#fdebe8;color:#d2402c;} .cpcard.c4 .ci{background:#e6f6ef;color:#1ba672;} .cpcard.c5 .ci{background:var(--bluebg);color:var(--blue);} .cpcard.c6 .ci{background:var(--purplebg);color:var(--purple);}
+  .cpcard.c2 .ctag{color:#b9760a;} .cpcard.c3 .ctag{color:#d2402c;} .cpcard.c4 .ctag{color:#1ba672;} .cpcard.c5 .ctag{color:var(--blue);} .cpcard.c6 .ctag{color:var(--purple);}
+  .cpcard .ct{font-weight:800;font-size:13px;color:var(--ink2);}
+  .cpcard .cd{font-size:11px;line-height:1.4;color:var(--muted);font-weight:500;}
+  .cp-legend{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;max-width:560px;margin-top:4px;}
+  .leg{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:600;color:var(--muted);}
+  .leg i{width:8px;height:8px;border-radius:50%;display:inline-block;}
+  .backlink{background:none;border:none;color:var(--muted);font-weight:700;font-size:12px;cursor:pointer;font-family:inherit;padding:2px 0;align-self:flex-start;}
+  .backlink:hover{color:var(--ink2);}
   .msg{max-width:90%;font-size:15px;}
   .msg.user{align-self:flex-end;}
   .msg.user .b{background:#f8f8fa;color:var(--ink2);border:1px solid var(--line);border-radius:18px 18px 4px 18px;padding:11px 15px;line-height:1.45;}
@@ -263,7 +285,14 @@
   .daseg{display:flex;gap:8px;margin-top:4px;}
   .daopt{flex:1;border:1px solid var(--line);background:#fff;border-radius:10px;padding:10px;font-size:13px;font-weight:700;color:var(--ink2);cursor:pointer;font-family:inherit;}
   .daopt:hover{border-color:var(--cyan);background:var(--cyanbg);}
-  .daopt.sel{border-color:var(--cyandk);background:var(--cyanbg);color:var(--cyandk);}
+  .daopt.sel{border-color:transparent;background:var(--grad);color:#fff;}
+  .nc2col{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:start;margin-top:2px;}
+  .ncprev{background:#fbfcfe;border:1px solid var(--line2);border-radius:10px;padding:11px 12px;}
+  .ncprev .npt{font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;color:var(--faint);margin-bottom:8px;}
+  .nprow{display:flex;justify-content:space-between;gap:10px;font-size:11.5px;padding:4px 0;border-bottom:1px dashed var(--line2);}
+  .nprow:last-child{border-bottom:none;}
+  .nprow span{color:var(--muted);} .nprow b{color:var(--ink2);font-weight:700;text-align:right;}
+  .ncform{display:flex;flex-direction:column;}
   .rsum{margin-top:9px;font-size:12.5px;line-height:1.55;color:var(--ink2);}
   .segwrap{overflow-x:auto;margin-top:4px;border:1px solid var(--line);border-radius:10px;}
   .segtbl{border-collapse:collapse;font-size:12px;white-space:nowrap;min-width:100%;}
@@ -278,9 +307,9 @@
   .segtbl .pill.paused{background:var(--amberbg);color:#b9760a;}
   .segtbl .pill.processed{background:var(--bluebg);color:var(--blue);}
   .segtbl .pill.stopped{background:#fdebe8;color:#d2402c;}
-  .segtbl .telebtn{display:inline-flex;align-items:center;gap:4px;border:1px solid var(--line);background:#fff;border-radius:7px;padding:4px 9px;font-size:11.5px;font-weight:700;color:var(--cyandk);cursor:pointer;font-family:inherit;}
-  .segtbl .telebtn svg{width:12px;height:12px;}
-  .segtbl .telebtn:hover{background:var(--cyanbg);}
+  .segtbl .telebtn{display:inline-flex;align-items:center;gap:4px;border:none;background:var(--grad);border-radius:7px;padding:5px 10px;font-size:11.5px;font-weight:700;color:#fff;cursor:pointer;font-family:inherit;}
+  .segtbl .telebtn svg{width:12px;height:12px;stroke:#fff;}
+  .segtbl .telebtn:hover{filter:brightness(.96);}
   .segtbl th:first-child,.segtbl td:first-child{position:sticky;left:0;z-index:2;width:180px;min-width:180px;max-width:180px;box-sizing:border-box;overflow:hidden;text-overflow:ellipsis;background:#fff;box-shadow:inset -1px 0 0 var(--line2);}
   .segtbl th:nth-child(2),.segtbl td:nth-child(2){position:sticky;left:180px;z-index:2;box-sizing:border-box;background:#fff;box-shadow:2px 0 5px rgba(15,23,34,.07),inset -1px 0 0 var(--line);}
   .segtbl thead th:first-child,.segtbl thead th:nth-child(2){background:#f8f8fa;z-index:3;}
@@ -289,7 +318,7 @@
   .chip:hover{background:#fcfdfe;border-color:#d4d9e0;}
   .btnrow{display:flex;gap:8px;}
   .btn{flex:1;border:none;border-radius:10px;padding:11px;font-size:12.5px;font-weight:700;cursor:pointer;font-family:inherit;}
-  .btn.go{background:var(--cyandk);color:#fff;}.btn.go:hover{background:#0d77b3;}
+  .btn.go{background:var(--grad);color:#fff;}.btn.go:hover{filter:brightness(.96);}
   .btn.alt{background:#fff;color:var(--ink);border:1px solid var(--line);}.btn.alt:hover{background:#f3f6f9;}
   .payoff{background:var(--grad);color:#fff;border-radius:12px;padding:12px 14px;font-size:12.5px;font-weight:600;}
   .payoff b{font-weight:800;}.payoff .small{font-weight:500;opacity:.92;font-size:11.5px;display:block;margin-top:3px;}
@@ -337,6 +366,7 @@
   <div class="scrim" id="scrim"></div>
   <div class="drawer" id="drawer">
     <div class="cp-head">
+      <button class="cphome" id="cophome" aria-label="Home" title="Home"><svg viewBox="0 0 24 24"><path d="M4 11l8-7 8 7M6 10v9h12v-9"/></svg></button>
       <div class="cp-mark"><svg viewBox="0 0 14 14"><path d="M5.878 14.01a2.977 2.977 0 0 0 2.969-2.986A2.977 2.977 0 0 0 5.878 8.04a2.977 2.977 0 0 0-2.968 2.985 2.977 2.977 0 0 0 2.968 2.985" fill="#70BF54"/><path d="M9.89 7.815c2.145 0 3.885-1.75 3.885-3.908S12.035 0 9.889 0 6.004 1.75 6.004 3.907s1.74 3.908 3.885 3.908" fill="#09BAE9"/><path d="M2.512 7.675A2.36 2.36 0 0 0 4.866 5.31a2.36 2.36 0 0 0-2.354-2.367A2.36 2.36 0 0 0 .16 5.309a2.36 2.36 0 0 0 2.353 2.366" fill="#FAA21B"/></svg></div>
       <div><div class="t">Campaign Copilot</div><span class="ctx" id="cpctx">Scope: all campaigns</span></div>
       <button class="cpmax" id="copmax" aria-label="Maximize"><svg viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></button>
@@ -535,6 +565,7 @@ document.getElementById('copopen').onclick=openCop;document.getElementById('copc
 const ICO_MAX='<svg viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>';
 const ICO_MIN='<svg viewBox="0 0 24 24"><path d="M9 3v6H3M21 15h-6v6M3 9h6V3M15 21v-6h6"/></svg>';
 document.getElementById('copmax').onclick=function(){const on=drawer.classList.toggle('max');this.innerHTML=on?ICO_MIN:ICO_MAX;this.setAttribute('aria-label',on?'Restore':'Maximize');};
+document.getElementById('cophome').onclick=function(){ if(!cpBusy) start(); };
 
 function userMsg(t){const d=document.createElement('div');d.className='msg user';d.innerHTML=`<div class="b">${t}</div>`;body.appendChild(d);scroll();}
 function clearFoot(){foot.innerHTML='';}
@@ -601,6 +632,382 @@ async function stepList(){await typing();await toolCall("Reporting fetch","count
 async function stepFilter(r){await typing();await toolCall("Reporting fetch",`searches all ${TOTAL} campaigns for “${r.toks.join(' ')}”`);await botMsg(`Of your ${TOTAL} campaigns, ${r.matches.length} match “${r.toks.join(' ')}”. Tap one to dive in.`);renderCampaignList(r.matches);}
 async function stepNoMatch(r){await typing();await toolCall("Reporting fetch",`searches all ${TOTAL} campaigns`);await botMsg(`I searched all ${TOTAL} campaigns but found none matching “${r?r.toks.join(' '):'that'}”. Try a theme like renewal, win-back, collections, upsell or loyalty.`);}
 async function routeList(v,fallback){const low=(v||'').toLowerCase();const r=v?matchCampaigns(v):null;if(!v||/running|right now|active|dial/.test(low)){await stepList();return;}if(r&&r.matches.length){await stepFilter(r);return;}if(/\b(all|only|every|filter)\b/.test(low)){await stepNoMatch(r);return;}await fallback();}
+// metric-based criteria, set independently per view
+const METRICS=['Connect %','RPC %','Attempt %','Conversion %','Revenue (₹)'];
+let critUnder={metric:'Connect %',value:64};
+let critAttn={metric:'Connect %',value:60};
+function rateOf(c){return c.dialled?c.connected/c.dialled*100:0;}
+function metricVal(c,metric){const dl=c.dialled||0,cn=c.connected||0,tot=c.total||1;
+ if(metric==='Connect %')return dl?cn/dl*100:0;
+ if(metric==='RPC %')return dl?cn*0.72/dl*100:0;
+ if(metric==='Attempt %')return tot?dl/tot*100:0;
+ if(metric==='Conversion %')return dl?cn*0.16/dl*100:0;
+ if(metric.indexOf('Revenue')===0)return cn*1200;
+ return 0;}
+function critFmt(cr){return cr.metric.indexOf('Revenue')===0?'₹'+cr.value.toLocaleString():cr.value+'%';}
+function fmtMetric(c,metric){const v=metricVal(c,metric);return metric.indexOf('Revenue')===0?'₹'+Math.round(v).toLocaleString():v.toFixed(1)+'%';}
+function criteriaLink(view){const cl=document.createElement('button');cl.className='backlink';cl.textContent='⚙ Set criteria';cl.onclick=()=>{if(!cpBusy)setCriteria(view);};body.appendChild(cl);scroll();}
+async function stepUnderperforming(){
+ const cr=critUnder;
+ await typing();await toolCall("Reporting fetch",`ranks all ${TOTAL} campaigns by ${cr.metric}`);
+ const list=CATALOG.filter(c=>c.dialled>0&&metricVal(c,cr.metric)<cr.value).sort((a,b)=>metricVal(a,cr.metric)-metricVal(b,cr.metric));
+ await botMsg(`${list.length} campaigns are below your benchmark of ${cr.metric} ${critFmt(cr)}, worst first. Tap one to dive in, or get a recommendation and act.`);
+ renderCampaignList(list); viewActions('under',list);
+}
+async function stepAttention(){
+ const cr=critAttn;
+ await typing();await toolCall("Campaign Monitoring",`flags stalled campaigns and those below ${cr.metric}`);
+ const list=CATALOG.filter(c=>c.dialled===0||metricVal(c,cr.metric)<cr.value);
+ await botMsg(`${list.length} campaigns need attention now, either stalled with no dials or below your ${cr.metric} criteria (${critFmt(cr)}). Tap one to dive in, or get a recommendation and act.`);
+ renderCampaignList(list); viewActions('attention',list);
+}
+function viewActions(view,list){
+ const w=document.createElement('div');w.className='btnrow';w.style.marginTop='6px';
+ const r=document.createElement('button');r.className='btn go';r.textContent='Recommendation';r.onclick=()=>{if(cpBusy)return;viewReco(view,list);};
+ const a=document.createElement('button');a.className='btn alt';a.textContent='Action';a.onclick=()=>{if(cpBusy)return;viewAction(view,list);};
+ w.appendChild(r);w.appendChild(a);body.appendChild(w);
+ criteriaLink(view);
+}
+function recFor(c,isU){
+ if((c.dialled||0)===0) return {act:'Resume / add leads',why:'stalled, no dials yet'};
+ const o=outcomes(c);
+ if(o.eligible>o.connected*0.4) return {act:'Rechurn voicemail + busy',why:'large callable backlog'};
+ if(rateOf(c)<50) return {act:'Switch pacing + rechurn',why:'very low connect'};
+ return {act:isU?'Boost + rechurn':'Rechurn',why:'below benchmark'};
+}
+async function viewReco(view,list){
+ if(cpBusy)return;cpBusy=true;userMsg('Recommendation');
+ const isU=view!=='attention', cr=isU?critUnder:critAttn;
+ await typing();await toolCall("Reporting fetch","analyses the flagged campaigns and the best next move");
+ const rows=list.slice(0,6).map(c=>{const r=recFor(c,isU);return `<tr><td class="rl">${c.name}</td><td class="r">${(c.dialled||0)===0?'<span class="mut">stalled</span>':fmtMetric(c,cr.metric)}</td><td>${r.act}<span class="recb go">act</span></td><td class="mut">${r.why}</td></tr>`;}).join('');
+ botBlock(`<div class="wdg"><div class="wt">Recommendation · ${isU?'below benchmark':'needs attention'}</div>
+   <table class="rectbl"><tr><th>Campaign</th><th class="r">${cr.metric}</th><th>Recommended action</th><th>Why</th></tr>${rows}</table>
+   <div class="rsum"><b>Why:</b> ${isU?'these are below your '+cr.metric+' benchmark. Stalled ones need leads or a resume, very low connect needs a pacing change, and the rest recover fastest by rechurning the callable backlog.':'these need a decision now. Resume the stalled campaigns and rechurn or boost the low-connect ones so they catch up before the day ends.'}</div></div>`).classList.add('wide');
+ await botMsg('Pick Action to apply any of these.');
+ const w=document.createElement('div');w.className='btnrow';w.style.marginTop='6px';
+ const a=document.createElement('button');a.className='btn go';a.textContent='Action';a.onclick=()=>{if(cpBusy)return;viewAction(view,list);};
+ w.appendChild(a);body.appendChild(w);scroll();
+ cpBusy=false;refocus();
+}
+async function viewAction(view,list){
+ if(cpBusy)return;cpBusy=true;userMsg('Action');
+ await typing();await toolCall("Manage Leads","prepares an action on a flagged campaign");
+ const id='va'+(rcSeq++), acts=['Rechurn','Boost record','Adjust pacing','Pause campaign','Resume campaign'];
+ const el=botBlock(`<div class="wdg" id="${id}"><div class="wt">Take action · ${view==='attention'?'needs attention':'below benchmark'}</div>
+   <div class="rcctl"><label>Campaign</label><select class="vacamp">${list.map(c=>`<option>${c.name}</option>`).join('')}</select></div>
+   <div class="rcctl"><label>Action</label><select class="vaact">${acts.map(a=>`<option>${a}</option>`).join('')}</select></div>
+   <button class="btn go vago" style="margin-top:11px">Continue</button></div>`);
+ el.classList.add('wide');
+ const root=el.querySelector('#'+id);
+ root.querySelector('.vago').onclick=async()=>{ if(cpBusy)return;
+   const nm=root.querySelector('.vacamp').value, act=root.querySelector('.vaact').value, c=CATALOG.find(x=>x.name===nm)||ACTIVE.find(x=>x.name===nm); chosen=c;
+   if(act==='Rechurn'){ runRechurnEntry(scopeMeta(c,false)); return; }
+   if(act==='Boost record'){ boostEntry(c); return; }
+   cpBusy=true; showToast(act+' · '+nm); await botMsg(`${act} applied to ${nm}. Captured in the campaign audit trail.`);
+   addAuditCard({what:`${act} · ${nm}`,who:'Aman Yadav · via Campaign Copilot',when:'just now'});
+   const g=root.querySelector('.vago');g.disabled=true;g.textContent='Done';g.style.opacity='.6'; cpBusy=false;refocus(); };
+ cpStage=9;cpBusy=false;refocus();
+}
+async function setCriteria(view){
+ if(cpBusy)return;cpBusy=true;
+ const isU=view!=='attention', cr=isU?critUnder:critAttn, title=isU?'Below benchmark criteria':'Needs attention criteria';
+ userMsg('Set criteria · '+(isU?'below benchmark':'needs attention'));
+ await typing();await toolCall("Settings","reads the "+(isU?'below benchmark':'needs attention')+" criteria");
+ const id='sc'+(rcSeq++);
+ const el=botBlock(`<div class="wdg" id="${id}"><div class="wt">${title}</div>
+   <div class="rcctl"><label>Metric</label><select class="scm">${METRICS.map(m=>`<option${m===cr.metric?' selected':''}>${m}</option>`).join('')}</select></div>
+   <div class="rcctl"><label>Flag when below</label><input type="number" class="scv" min="0" step="1" value="${cr.value}" style="width:96px;border:1px solid var(--line);border-radius:8px;padding:6px 8px;font-family:inherit;font-size:12.5px;text-align:right"><span class="pct scu"></span></div>
+   <div class="rsum">${isU?'Ranks campaigns worst-first against this metric.':'Always also includes campaigns stalled with no dials.'} Metrics: ${METRICS.join(', ')}.</div>
+   <button class="btn go scgo" style="margin-top:11px">Save criteria</button></div>`);
+ el.classList.add('wide');
+ const root=el.querySelector('#'+id), mSel=root.querySelector('.scm'), vIn=root.querySelector('.scv'), unit=root.querySelector('.scu');
+ const setUnit=()=>{unit.textContent=mSel.value.indexOf('Revenue')===0?'₹':'%';};setUnit();mSel.onchange=setUnit;
+ root.querySelector('.scgo').onclick=async()=>{ if(cpBusy)return;cpBusy=true;
+   cr.metric=mSel.value; cr.value=Math.max(0,+vIn.value||0);
+   showToast('Criteria saved · '+(isU?'below benchmark':'needs attention')+' · '+cr.metric);
+   await botMsg(`Saved. ${isU?'Below benchmark':'Needs attention'} now flags campaigns with ${cr.metric} below ${critFmt(cr)}${isU?'':' or stalled'}.`);
+   const g=root.querySelector('.scgo');g.disabled=true;g.textContent='Saved';g.style.opacity='.6'; cpBusy=false;refocus(); };
+ cpStage=9;cpBusy=false;refocus();
+}
+// config inherited from campaign nomenclature when not explicitly set
+const CAMPCFG={
+ renewal:{plan:'TRAI-1600 safe',retry:'Renewal Retry v2',daily:3,weekly:8,supp:'DND + Renewal-DNC',hours:'10 AM - 7 PM'},
+ winback:{plan:'Default',retry:'Win-back Retry',daily:4,weekly:10,supp:'DND',hours:'9 AM - 8 PM'},
+ collections:{plan:'After-hours',retry:'Collections Retry',daily:5,weekly:12,supp:'DND + Legal-hold',hours:'9 AM - 6 PM'},
+ upsell:{plan:'Default',retry:'Upsell Retry',daily:3,weekly:7,supp:'DND',hours:'10 AM - 6 PM'},
+ default:{plan:'Default',retry:'Outbound Retry Strategy',daily:3,weekly:8,supp:'DND',hours:'9 AM - 6 PM'}
+};
+function inferType(name){const n=(name||'').toLowerCase();if(/renew/.test(n))return'renewal';if(/win.?back/.test(n))return'winback';if(/collect/.test(n))return'collections';if(/upsell|cross.?sell|upgrade/.test(n))return'upsell';return'default';}
+async function stepCreate(){
+ await typing();await toolCall("Campaign setup","opens a new outbound campaign draft");
+ await botMsg("Set up a new campaign. Anything you don't set is inherited from the campaign type in the name, so a renewal campaign picks up the renewal dial plan, retry strategy, attempts, suppression and business hours. You can also clone an existing campaign, segments are never cloned. The left panel previews everything before you create.");
+ const id='nc'+(rcSeq++);
+ const el=botBlock(`<div class="wdg" id="${id}"><div class="wt">New campaign</div>
+   <div class="nc2col">
+     <div class="ncprev"><div class="npt">Preview</div><div class="npbody"></div></div>
+     <div class="ncform">
+       <div class="rcctl"><label>Name</label><input type="text" class="ncname" placeholder="e.g. Q3 Renewal Drive" style="flex:1;border:1px solid var(--line);border-radius:8px;padding:7px 9px;font-family:inherit;font-size:12.5px;"></div>
+       <div class="rcctl"><label>Clone from</label><select class="ncclone"><option>None</option>${CATALOG.map(c=>`<option>${c.name}</option>`).join('')}</select></div>
+       <div class="rcctl"><label>Dialer</label><select class="ncdial"><option>Predictive</option><option>Progressive</option><option>Preview</option></select></div>
+       <div class="rcctl"><label>Schedule</label><select class="ncwhen"><option>Now</option><option>Today 6 PM</option><option>Tomorrow 9 AM</option></select></div>
+       <button class="btn go ncgo" style="margin-top:11px">Create campaign</button>
+     </div>
+   </div></div>`);
+ el.classList.add('wide');
+ const root=el.querySelector('#'+id);
+ const nameI=root.querySelector('.ncname'), cloneS=root.querySelector('.ncclone'), dialS=root.querySelector('.ncdial'), whenS=root.querySelector('.ncwhen'), prev=root.querySelector('.npbody');
+ const cfg=()=>{ const src=cloneS.value!=='None'?cloneS.value:nameI.value; const t=inferType(src); return Object.assign({t},CAMPCFG[t]); };
+ function renderPrev(){ const c=cfg(), nm=nameI.value||'(unnamed)', cloned=cloneS.value!=='None';
+   prev.innerHTML=[['Name',nm],['Type',c.t],['Dialer',dialS.value],['Schedule',whenS.value],['Dial plan',c.plan],['Retry strategy',c.retry],['Daily attempts',c.daily],['Weekly attempts',c.weekly],['Suppression',c.supp],['Business hours',c.hours],['Segments',cloned?'not cloned, add after':'add after create']]
+     .map(r=>`<div class="nprow"><span>${r[0]}</span><b>${r[1]}</b></div>`).join('');
+ }
+ nameI.oninput=renderPrev; cloneS.onchange=renderPrev; dialS.onchange=renderPrev; whenS.onchange=renderPrev; renderPrev();
+ root.querySelector('.ncgo').onclick=async()=>{ if(cpBusy)return;cpBusy=true;
+   const nm=(nameI.value||'New campaign').trim(), c=cfg();
+   showToast('Campaign created · '+nm);
+   await botMsg(`Created ${nm} (${c.t}) with ${dialS.value} dialer, ${c.plan} dial plan, ${c.retry}, ${c.daily}/day and ${c.weekly}/week attempts, ${c.supp} suppression, ${c.hours}.${cloneS.value!=='None'?' Cloned config from '+cloneS.value+', segments not copied.':''} Now add segments.`);
+   const g=root.querySelector('.ncgo');g.disabled=true;g.textContent='Campaign created';g.style.opacity='.6';
+   cpBusy=false; stepSegments(nm); };
+ cpStage=9;
+}
+function stepSegments(camp){
+ const w=document.createElement('div');w.className='btnrow';w.style.marginTop='6px';
+ const a=document.createElement('button');a.className='btn go';a.textContent='Add a segment';a.onclick=()=>{if(cpBusy)return;segmentForm(camp);};
+ const b=document.createElement('button');b.className='btn alt';b.textContent='Skip for now';b.onclick=()=>{if(cpBusy)return;goAllCampaigns();};
+ w.appendChild(a);w.appendChild(b);body.appendChild(w);scroll();
+}
+async function segmentForm(camp){
+ if(cpBusy)return;cpBusy=true;userMsg('Add a segment');
+ await typing();await toolCall("Segment setup","creates a segment for "+camp);
+ const id='sg'+(rcSeq++);
+ const el=botBlock(`<div class="wdg" id="${id}"><div class="wt">New segment · ${camp}</div>
+   <div class="rcctl"><label>Segment name</label><input type="text" class="sgname" placeholder="e.g. Weekday 9AM-12PM" style="flex:1;border:1px solid var(--line);border-radius:8px;padding:7px 9px;font-family:inherit;font-size:12.5px;"></div>
+   <div class="rcctl"><label>Source file</label><select class="sgfile">${LFILES.map(f=>`<option>${f}</option>`).join('')}</select></div>
+   <div class="rcctl"><label>Skill</label><select class="sgskill"><option>Retention</option><option>Collections</option><option>Sales</option><option>Support</option></select></div>
+   <button class="btn go sggo" style="margin-top:11px">Create segment</button></div>`);
+ el.classList.add('wide');
+ const root=el.querySelector('#'+id);
+ root.querySelector('.sggo').onclick=async()=>{ if(cpBusy)return;cpBusy=true; const sn=(root.querySelector('.sgname').value||'Segment 1').trim();
+   showToast('Segment created · '+sn); await botMsg(`Created segment ${sn} on ${camp} from ${root.querySelector('.sgfile').value}, skill ${root.querySelector('.sgskill').value}. The campaign is ready to dial.`);
+   const g=root.querySelector('.sggo');g.disabled=true;g.textContent='Segment created';g.style.opacity='.6'; cpBusy=false;refocus(); };
+ cpBusy=false;refocus();
+}
+async function launchCard(kind){
+ if(cpBusy)return;
+ const lp=body.querySelector('.cp-landing'); if(lp) lp.remove();
+ cpBusy=true;
+ if(kind==='running'){userMsg('Show all running campaigns');await stepList();cpStage=1;}
+ else if(kind==='under'){userMsg('Show campaigns not performing up to standard');await stepUnderperforming();cpStage=1;}
+ else if(kind==='attention'){userMsg('Show campaigns that need my immediate attention');await stepAttention();cpStage=1;}
+ else if(kind==='missed'){userMsg('Show missed calls');await stepMissed();cpStage=9;}
+ else if(kind==='leads'){userMsg('Lead summary');await stepLeadSummary();cpStage=9;}
+ else if(kind==='create'){userMsg('Create a new campaign');await stepCreate();cpStage=9;}
+ cpBusy=false;refocus();
+}
+// back to the running-campaigns list from any campaign/segment scope
+async function goAllCampaigns(){
+ if(cpBusy)return;cpBusy=true;chosen=null;setScope('Scope: all campaigns');
+ userMsg('Back to all campaigns');await stepList();cpStage=1;cpBusy=false;refocus();
+}
+// missed-call records: inbound missed and the agent dial-back attempts
+const MISSED=[
+ {assignee:'Priya Nair',phone:'+91 98•••41020',agent:'Sarah Lee',missed:'09:12',connT:'09:41',schedT:'—',attempts:2,result:'Connected'},
+ {assignee:'Rahul Mehta',phone:'+91 99•••22841',agent:'David Chen',missed:'09:40',connT:'—',schedT:'14:30',attempts:1,result:'Voicemail'},
+ {assignee:'Karan Shah',phone:'+91 81•••77310',agent:'—',missed:'10:05',connT:'—',schedT:'12:00',attempts:0,result:'Pending'},
+ {assignee:'Anita Rao',phone:'+91 90•••55129',agent:'Emily Davis',missed:'10:22',connT:'—',schedT:'15:00',attempts:3,result:'Busy'},
+ {assignee:'Vikram Singh',phone:'+91 70•••90233',agent:'Michael Brown',missed:'10:48',connT:'11:05',schedT:'—',attempts:1,result:'Connected'},
+ {assignee:'Neha Gupta',phone:'+91 98•••11476',agent:'—',missed:'11:15',connT:'—',schedT:'13:15',attempts:0,result:'Pending'},
+ {assignee:'Arjun Patel',phone:'+91 96•••33820',agent:'Olivia Martin',missed:'11:39',connT:'—',schedT:'16:00',attempts:2,result:'No answer'}
+];
+async function stepMissed(){
+ await typing();await toolCall("Campaign Monitoring","reads inbound missed calls and agent dial-back attempts");
+ const recv=MISSED.length, dialed=MISSED.filter(r=>r.attempts>0).length, conn=MISSED.filter(r=>r.result==='Connected').length, pend=MISSED.filter(r=>r.result==='Pending').length;
+ botBlock(`<div class="detcard"><div class="dt"><span class="cdot"></span>Missed calls today</div>
+   <div class="dethead">
+     <div class="hm"><div class="k">Received</div><div class="v">${recv}</div></div>
+     <div class="hm"><div class="k">Dialled back</div><div class="v">${dialed}</div><div class="s">${Math.round(dialed/recv*100)}% of received</div></div>
+     <div class="hm"><div class="k">Connected</div><div class="v">${conn}</div><div class="s">on call back</div></div>
+   </div>
+   <div class="detgrid">
+     <div class="detm"><div class="k">${I.bell} Pending dial-back</div><div class="v">${pend}</div></div>
+     <div class="detm"><div class="k">${I.refresh} Reconnect rate</div><div class="v">${dialed?Math.round(conn/dialed*100):0}%</div></div>
+   </div></div>`).classList.add('wide');
+ const pillc=r=>({Connected:'active',Voicemail:'paused',Busy:'paused','No answer':'processed',Pending:'stopped'}[r]||'paused');
+ const rows=MISSED.map(r=>`<tr>
+   <td class="sgn" title="${r.assignee}">${r.assignee}</td>
+   <td><span class="pill ${pillc(r.result)}">${r.result}</span></td>
+   <td>${r.phone}</td><td>${r.agent}</td>
+   <td>${r.missed}</td><td>${r.connT}</td><td>${r.schedT}</td><td class="r">${r.attempts}</td></tr>`).join('');
+ const el=botBlock(`<div class="seglabel">Missed-call detail · ${recv} calls</div>
+   <div class="segwrap"><table class="segtbl">
+   <thead><tr><th>Assignee</th><th>Call result</th><th>Phone</th><th>Agent</th><th>Missed call time</th><th>Connected time</th><th>Scheduled time</th><th class="r">Total attempts</th></tr></thead>
+   <tbody>${rows}</tbody></table></div>`);
+ el.classList.add('wide');
+ await botMsg(`${recv} missed calls today. Agents dialled back ${dialed}, ${conn} reconnected, ${pend} still pending with no dial-back yet.`);
+}
+
+// ===== Lead Summary (account-wide, today) =====
+const LFILES=['Apr_Batch_01.csv','Apr_Batch_02.csv','Web_Leads_Mar.csv','CRM_Sync_Apr.csv'];
+// reconciled lead model: total = fresh + dialled; dialled = connected + not-connected; retried & retried-scheduled are subsets
+const TFRAMES={'Today':1,'Tomorrow':0.45,'This week':5.4,'Last week':6.1};
+let leadTF='Today';
+function leadAgg(tf){
+ const f=TFRAMES[tf]||1, R=n=>Math.round(n*f);
+ const total=R(4200), fresh=R(1600), dialled=total-fresh, connected=R(1100), notConnected=dialled-connected;
+ return {total,fresh,dialled,connected,notConnected,retried:R(900),retriedSched:R(600)};
+}
+// lead-level records with full call detail, tagged by campaign / segment / file
+const TELS2=['Voicemail','Busy','No answer','Call Drop','Connected'];
+const BIZO=['Interested','Callback','Pricing objection','Converted','Not interested'];
+const TIMES=['09:05','09:40','10:12','10:48','11:20','11:55','12:30','13:05'];
+function buildLeadRecords(){
+ const recs=[]; let id=100001;
+ ACTIVE.forEach((c,ci)=>{ campSegments(c).slice(0,2).forEach((s,si)=>{ for(let k=0;k<2;k++){
+   const h=ci*5+si*3+k*2, status=['fresh','attempted','connected','retry'][h%4], dialled=status!=='fresh', isConn=status==='connected';
+   recs.push({id:'L'+(id++),campaign:c.name,segment:s.name,file:LFILES[(ci+si+k)%LFILES.length],
+     ing:TIMES[h%TIMES.length],status,
+     att:dialled?TIMES[(h+2)%TIMES.length]:'—', conn:isConn?TIMES[(h+3)%TIMES.length]:'—',
+     sched:(status==='attempted'||status==='retry')?TIMES[(h+5)%TIMES.length]:'—',
+     campCount:dialled?1+(h%3):0, globalCount:1+(h%5), lastTel:dialled?TELS2[h%5]:'—', biz:isConn?BIZO[h%BIZO.length]:'—'});
+ }});});
+ return recs;
+}
+const LEADRECS=buildLeadRecords();
+const lpill=s=>({fresh:'processed',attempted:'paused',connected:'active',retry:'paused'}[s]||'paused');
+function emptyRow(n){return `<tr><td colspan="${n}" class="mut" style="padding:12px">No records match this filter.</td></tr>`;}
+
+async function stepLeadSummary(){
+ await typing();await toolCall("Manage Leads","rolls up lead ingestion and dialing");
+ const id='ls'+(rcSeq++);
+ const el=botBlock(`<div id="${id}"><div class="seglabel">Ingestion window</div><div class="daseg lsseg" style="flex-wrap:wrap"></div><div class="lscard" style="margin-top:10px"></div></div>`);
+ el.classList.add('wide');
+ const root=el.querySelector('#'+id), seg=root.querySelector('.lsseg'), card=root.querySelector('.lscard');
+ function render(){ // updates in place, no new block
+   seg.innerHTML=Object.keys(TFRAMES).map(t=>`<button class="daopt${t===leadTF?' sel':''}" data-tf="${t}">${t}</button>`).join('');
+   const a=leadAgg(leadTF);
+   card.innerHTML=`<div class="detcard"><div class="dt"><span class="cdot"></span>Lead Summary · ${leadTF}</div>
+     <div class="dethead">
+       <div class="hm"><div class="k">Leads ingested</div><div class="v">${a.total.toLocaleString()}</div></div>
+       <div class="hm"><div class="k">Dialled</div><div class="v">${a.dialled.toLocaleString()}</div><div class="s">${Math.round(a.dialled/a.total*100)}% of ingested</div></div>
+       <div class="hm"><div class="k">Pending</div><div class="v">${a.fresh.toLocaleString()}</div><div class="s">not yet dialled</div></div>
+     </div></div>
+     <div class="rsum">${a.total.toLocaleString()} leads ingested ${leadTF.toLowerCase()}. ${a.dialled.toLocaleString()} dialled, ${a.fresh.toLocaleString()} still pending.</div>`;
+   seg.querySelectorAll('.daopt').forEach(b=>{ b.onclick=()=>{ leadTF=b.dataset.tf; render(); }; });
+ }
+ render();
+ const w=document.createElement('div');w.className='btnrow';w.style.marginTop='6px';
+ const m=document.createElement('button');m.className='btn go';m.textContent='More info';m.onclick=()=>{if(cpBusy)return;leadMore();};
+ w.appendChild(m);body.appendChild(w);scroll();
+}
+async function leadMore(){
+ if(cpBusy)return;cpBusy=true;userMsg('More info');
+ await typing();await toolCall("Manage Leads","reads the full lead call status");
+ const a=leadAgg(leadTF);
+ botBlock(`<div class="detcard"><div class="dt"><span class="cdot"></span>Lead call status · ${leadTF}</div>
+   <div class="dethead">
+     <div class="hm"><div class="k">Total leads</div><div class="v">${a.total.toLocaleString()}</div></div>
+     <div class="hm"><div class="k">Dialled leads</div><div class="v">${a.dialled.toLocaleString()}</div></div>
+     <div class="hm"><div class="k">Connected</div><div class="v">${a.connected.toLocaleString()}</div></div>
+   </div>
+   <div class="detgrid">
+     <div class="detm"><div class="k">${I.spark} Fresh leads</div><div class="v">${a.fresh.toLocaleString()}</div><div class="s2">not yet dialled</div></div>
+     <div class="detm"><div class="k">${I.phone} Not connected</div><div class="v">${a.notConnected.toLocaleString()}</div><div class="s2">dialled, no answer</div></div>
+     <div class="detm"><div class="k">${I.refresh} Retried</div><div class="v">${a.retried.toLocaleString()}</div><div class="s2">re-attempted</div></div>
+     <div class="detm"><div class="k">${I.cal} Retried scheduled</div><div class="v">${a.retriedSched.toLocaleString()}</div><div class="s2">queued for retry</div></div>
+   </div></div>`).classList.add('wide');
+ await botMsg(`Total ${a.total.toLocaleString()} = ${a.fresh.toLocaleString()} fresh + ${a.dialled.toLocaleString()} dialled. Of the dialled, ${a.connected.toLocaleString()} connected and ${a.notConnected.toLocaleString()} didn't. ${a.retried.toLocaleString()} have been retried and ${a.retriedSched.toLocaleString()} are scheduled for the next retry. View the records by campaign or by file.`);
+ const w=document.createElement('div');w.className='btnrow';w.style.marginTop='6px';
+ const a1=document.createElement('button');a1.className='btn go';a1.textContent='By Campaign';a1.onclick=()=>{if(cpBusy)return;leadView2('campaign');};
+ const a2=document.createElement('button');a2.className='btn alt';a2.textContent='By File';a2.onclick=()=>{if(cpBusy)return;leadView2('file');};
+ w.appendChild(a1);w.appendChild(a2);body.appendChild(w);scroll();
+ cpBusy=false;refocus();
+}
+const LEADCOLS=`<th>Lead ID</th><th>Lead status</th><th>Ingestion time</th><th>Attempted time</th><th>Connected time</th><th>Scheduled retry</th><th class="r">Campaign calls</th><th class="r">Global calls</th><th>Last telephony</th><th>Business outcome</th>`;
+function leadRowCells(l){return `<td>${l.id}</td><td><span class="pill ${lpill(l.status)}">${l.status}</span></td><td>${l.ing}</td><td>${l.att}</td><td>${l.conn}</td><td>${l.sched}</td><td class="r">${l.campCount}</td><td class="r">${l.globalCount}</td><td>${l.lastTel}</td><td>${l.biz}</td>`;}
+// lead records by campaign or file
+async function leadView2(mode){
+ if(cpBusy)return;cpBusy=true;userMsg(mode==='file'?'View leads by file':'View leads by campaign');
+ await typing();await toolCall("Manage Leads","reads lead-level records by "+mode);
+ const id='lv'+(rcSeq++);
+ const inpS='style="flex:1;border:1px solid var(--line);border-radius:8px;padding:6px 9px;font-family:inherit;font-size:12.5px;"';
+ if(mode==='campaign'){
+   const el=botBlock(`<div class="wdg" id="${id}"><div class="wt">Lead records · by campaign</div>
+     <div class="rcctl"><label>Campaign</label><select class="lvcamp">${ACTIVE.map(c=>`<option>${c.name}</option>`).join('')}</select></div>
+     <div class="rcctl"><label>Segment</label><select class="lvseg"></select></div>
+     <div class="rcctl"><label>Lead ID</label><input type="text" class="lvq" placeholder="search lead id" ${inpS}></div>
+     <div class="lvhdr seglabel" style="margin-top:8px"></div>
+     <div class="segwrap" style="margin-top:4px"><table class="segtbl"><thead><tr><th>Segment</th>${LEADCOLS}</tr></thead><tbody class="lvbody"></tbody></table></div>
+     <div class="rsum lvcount"></div></div>`);
+   el.classList.add('wide');
+   const root=el.querySelector('#'+id), camp=root.querySelector('.lvcamp'), segSel=root.querySelector('.lvseg'), q=root.querySelector('.lvq'), tb=root.querySelector('.lvbody'), cnt=root.querySelector('.lvcount'), hdr=root.querySelector('.lvhdr');
+   function fillSegs(){ const segs=[...new Set(LEADRECS.filter(l=>l.campaign===camp.value).map(l=>l.segment))]; segSel.innerHTML='<option>All segments</option>'+segs.map(s=>`<option>${s}</option>`).join(''); }
+   function render(){ const nm=camp.value, sg=segSel.value, qq=(q.value||'').trim().toLowerCase(); hdr.textContent='Campaign · '+nm;
+     const rows=LEADRECS.filter(l=>l.campaign===nm&&(sg==='All segments'||!sg||l.segment===sg)&&(!qq||l.id.toLowerCase().includes(qq)));
+     tb.innerHTML=rows.map(l=>`<tr><td class="sgn" title="${l.segment}">${l.segment}</td>${leadRowCells(l)}</tr>`).join('')||emptyRow(11);
+     cnt.textContent=rows.length+' leads';
+   }
+   camp.onchange=()=>{fillSegs();render();}; segSel.onchange=render; q.oninput=render; fillSegs(); render();
+ } else {
+   const el=botBlock(`<div class="wdg" id="${id}"><div class="wt">Lead records · by file</div>
+     <div class="rcctl"><label>File</label><select class="lvfile"><option>All files (summary)</option>${LFILES.map(f=>`<option>${f}</option>`).join('')}</select></div>
+     <div class="rcctl"><label>Lead ID</label><input type="text" class="lvq" placeholder="search lead id (within a file)" ${inpS}></div>
+     <div class="segwrap" style="margin-top:8px"><table class="segtbl"><thead class="lvhead"></thead><tbody class="lvbody"></tbody></table></div>
+     <div class="rsum lvcount"></div></div>`);
+   el.classList.add('wide');
+   const root=el.querySelector('#'+id), sel=root.querySelector('.lvfile'), q=root.querySelector('.lvq'), th=root.querySelector('.lvhead'), tb=root.querySelector('.lvbody'), cnt=root.querySelector('.lvcount');
+   function render(){ const f=sel.value, qq=(q.value||'').trim().toLowerCase();
+     if(f==='All files (summary)'){
+       th.innerHTML=`<tr><th>File</th><th class="r">Total</th><th class="r">Fresh</th><th class="r">Dialled</th><th class="r">Connected</th></tr>`;
+       tb.innerHTML=LFILES.map(file=>{ const ls=LEADRECS.filter(l=>l.file===file), fr=ls.filter(l=>l.status==='fresh').length, cn=ls.filter(l=>l.status==='connected').length;
+         return `<tr><td class="sgn" title="${file}">${file}</td><td class="r">${ls.length}</td><td class="r">${fr}</td><td class="r">${ls.length-fr}</td><td class="r">${cn}</td></tr>`; }).join('');
+       cnt.textContent=LFILES.length+' files · pick a file to see lead-level detail with lead id';
+     } else {
+       th.innerHTML=`<tr><th>Campaign</th>${LEADCOLS}</tr>`;
+       const rows=LEADRECS.filter(l=>l.file===f&&(!qq||l.id.toLowerCase().includes(qq)));
+       tb.innerHTML=rows.map(l=>`<tr><td class="sgn" title="${l.campaign}">${l.campaign}</td>${leadRowCells(l)}</tr>`).join('')||emptyRow(11);
+       cnt.textContent=rows.length+' leads in '+f;
+     }
+   }
+   sel.onchange=render; q.oninput=render; render();
+ }
+ await botMsg(mode==='file'?'By file shows a per-file summary first. Pick a file to expand into each lead with its lead id and call detail. Then you can rechurn or boost the records.':'Pick a campaign to see each lead with segment, status, call counts, and the last telephony and business outcome. Then you can rechurn or boost the records.');
+ leadActions();
+ cpStage=9;cpBusy=false;refocus();
+}
+function leadActions(){
+ const w=document.createElement('div');w.className='btnrow';w.style.marginTop='8px';
+ const r=document.createElement('button');r.className='btn go';r.textContent='Rechurn';r.onclick=()=>{if(cpBusy)return;pickCampaignThen(c=>runRechurnEntry(scopeMeta(c,false)),'Rechurn');};
+ const b=document.createElement('button');b.className='btn alt';b.textContent='Boost record';b.onclick=()=>{if(cpBusy)return;pickCampaignThen(c=>boostEntry(c),'Boost record');};
+ w.appendChild(r);w.appendChild(b);body.appendChild(w);scroll();
+}
+// these lead actions need a campaign chosen first
+function pickCampaignThen(fn,label){
+ const id='pk'+(rcSeq++);
+ const el=botBlock(`<div class="wdg" id="${id}"><div class="wt">${label} · select a campaign first</div>
+   <div class="rcctl"><label>Campaign</label><select class="pkcamp">${ACTIVE.map(c=>`<option>${c.name}</option>`).join('')}</select></div>
+   <button class="btn go pkgo" style="margin-top:11px">Continue</button></div>`);
+ el.classList.add('wide');
+ const root=el.querySelector('#'+id);
+ root.querySelector('.pkgo').onclick=()=>{ if(cpBusy)return; const nm=root.querySelector('.pkcamp').value; const c=CATALOG.find(x=>x.name===nm)||ACTIVE.find(x=>x.name===nm); chosen=c; fn(c); };
+ scroll();
+}
+async function boostEntry(c){
+ if(cpBusy)return;cpBusy=true;setScope('Scope: '+c.name);userMsg('Boost record · '+c.name);
+ await typing();await toolCall("Manage Leads","prepares a priority boost for "+c.name,true);
+ const id='bo'+(rcSeq++);
+ const el=botBlock(`<div class="wdg" id="${id}"><div class="wt">Boost record · ${c.name}</div>
+   <div class="rsum">Boost moves the selected records to the front of the dialing queue and raises their pacing priority, so they are attempted before the rest of the campaign.</div>
+   <div class="rcctl"><label>Boost level</label><select class="bolvl"><option>High (front of queue)</option><option>Medium</option></select></div>
+   <div class="rcctl"><label>Apply for</label><select class="bowhen"><option>Next 1 hour</option><option>Next 3 hours</option><option>Rest of day</option></select></div>
+   <button class="btn go bogo" style="margin-top:11px">Boost records</button></div>`);
+ el.classList.add('wide');
+ const root=el.querySelector('#'+id);
+ root.querySelector('.bogo').onclick=async()=>{ if(cpBusy)return;cpBusy=true; const lvl=root.querySelector('.bolvl').value, wh=root.querySelector('.bowhen').value;
+   showToast('Boost applied · '+c.name); await botMsg(`Boosted ${c.name} records to ${lvl}, applied for ${wh.toLowerCase()}. Captured in the campaign audit trail.`);
+   addAuditCard({what:`Boost · ${c.name} · ${lvl}`,who:'Aman Yadav · via Campaign Copilot',when:'just now'});
+   const g=root.querySelector('.bogo');g.disabled=true;g.textContent='Boost applied';g.style.opacity='.6'; cpBusy=false;refocus(); };
+ cpStage=9;cpBusy=false;refocus();
+}
 // derive the per-campaign drill-down metrics: fresh, retried, agents, dialer profile
 function campDetail(c){
  const fresh=Math.max(0,c.total-(c.dialled||0));
@@ -700,6 +1107,18 @@ function scopeMeta(sc,isSeg){
  if(isSeg)return{name:sc.name,total:sc.total,dialled:sc.dialled,connected:sc.connected,avail:sc.avail,prof:sc.prof,kind:'segment'};
  const d=campDetail(sc);return{name:sc.name,total:sc.total,dialled:sc.dialled,connected:sc.connected,avail:d.avail,prof:d.prof,kind:'campaign'};
 }
+// resolve a campaign or segment by name from free text (used by the "rechurn <name>" command)
+function resolveScope(txt){
+ const q=(txt||'').replace(/rechurn/ig,'').replace(/\s+/g,' ').trim().toLowerCase();
+ if(q.length<3) return null;
+ const camp=CATALOG.find(c=>c.name.toLowerCase()===q)||CATALOG.find(c=>q.includes(c.name.toLowerCase()))||CATALOG.find(c=>c.name.toLowerCase().includes(q));
+ if(camp) return {kind:'campaign',camp};
+ for(const c of CATALOG){
+   const seg=campSegments(c).find(s=>s.name.toLowerCase()===q||q.includes(s.name.toLowerCase())||s.name.toLowerCase().includes(q));
+   if(seg) return {kind:'segment',camp:c,seg};
+ }
+ return null;
+}
 // split the not-connected pool by telephony outcome; retryHrs reflects the Outbound Retry Strategy
 function telephony(m){
  const nc=Math.max(0,(m.dialled||0)-(m.connected||0));
@@ -743,10 +1162,10 @@ function disposition(m){
 function dispRows(d){return d.rows.map(r=>({key:r.key,label:r.label,count:r.count,meta:r.route,rec:r.rec,noRetry:!!r.noRetry,optOut:!!r.optOut}));}
 
 // entry point: pick the derived attribute (Telephony / Disposition)
-async function runRechurnEntry(m){
+async function runRechurnEntry(m,silent){
  if(cpBusy)return;cpBusy=true;
  setScope('Scope: '+m.name+(m.kind==='segment'?' (segment)':''));
- userMsg('Rechurn · '+m.name);
+ if(!silent)userMsg('Rechurn · '+m.name);
  await typing();await botMsg(`Rechurn on ${m.name}. Pick the derived attribute to work from.`);
  const id='da'+(rcSeq++);
  const DESC={
@@ -890,6 +1309,8 @@ function openRechurn(m,rows,fromReco,mode){
 }
 
 function campOptions(c){
+ const back=document.createElement('button'); back.className='backlink'; back.textContent='‹ All campaigns';
+ back.onclick=()=>goAllCampaigns(); body.appendChild(back);
  const w=document.createElement('div'); w.className='btnrow'; w.style.marginTop='6px';
  const b1=document.createElement('button'); b1.className='btn go'; b1.textContent='Show segment details';
  b1.onclick=()=>{ if(cpBusy)return; showSegments(c); };
@@ -906,6 +1327,33 @@ async function send(){
  const lp=body.querySelector('.cp-landing'); if(lp) lp.remove();
  body.querySelectorAll('.cp-sugs-inline').forEach(e=>e.remove());
  const v=(inp.value||'').trim();
+ // keyword: "rechurn" opens the rechurn action for the selected campaign, else asks to pick one first
+ if(/rechurn/i.test(v)){
+   userMsg(v); inp.value='';
+   const hit=resolveScope(v);
+   if(hit){ // a campaign or segment name was typed, open it directly
+     chosen=hit.camp; renderCampaigns();
+     runRechurnEntry(hit.kind==='segment'?scopeMeta(hit.seg,true):scopeMeta(hit.camp,false), true);
+     return;
+   }
+   if(chosen){ runRechurnEntry(scopeMeta(chosen,false), true); return; } // use the already-selected campaign
+   cpBusy=true; await typing();
+   await botMsg("Tell me which campaign, for example “rechurn Renewal Reminders”, or pick one below.");
+   if(!body.querySelector('.camprow')) await stepList();
+   cpStage=1; cpBusy=false; refocus(); return;
+ }
+ // keyword routes: same idea as rechurn, reachable from any prompt
+ if(/missed/i.test(v)){ userMsg(v); inp.value=''; cpBusy=true; await stepMissed(); cpStage=9; cpBusy=false; refocus(); return; }
+ if(/boost/i.test(v)){ userMsg(v); inp.value=''; pickCampaignThen(c=>boostEntry(c),'Boost record'); return; }
+ if(/set criteria|benchmark|attention criteria|threshold/i.test(v)){ userMsg(v); inp.value=''; setCriteria(); return; }
+ if(/create.*campaign|new campaign/i.test(v)){ userMsg(v); inp.value=''; cpBusy=true; await stepCreate(); cpBusy=false; refocus(); return; }
+ if(/lead summary|leads ingested|lead-level|view leads|\bleads?\b/i.test(v)){
+   userMsg(v); inp.value=''; cpBusy=true;
+   if(/by file|file/i.test(v)) await leadView2('file');
+   else if(/by campaign|campaign/i.test(v)) await leadView2('campaign');
+   else await stepLeadSummary();
+   cpStage=9; cpBusy=false; refocus(); return;
+ }
  if(cpStage===0){userMsg(v||"Which campaigns are running right now?");inp.value='';cpBusy=true;await routeList(v,stepList);cpStage=1;cpBusy=false;refocus();return;}
  if(cpStage===1){if(!v)return;userMsg(v);inp.value='';cpBusy=true;await routeList(v,async()=>{await typing();await botMsg("Tap one of the campaigns above to pick it, or ask me to filter — for example, “show me all renewal campaigns”.");});cpBusy=false;refocus();return;}
  if(cpStage===2){userMsg(v||"Show me today's report");inp.value='';cpBusy=true;await stepReport();cpStage=3;cpBusy=false;refocus();return;}
@@ -918,12 +1366,21 @@ function start(){
  body.innerHTML='';setScope('Scope: all campaigns');cpStage=0;cpBusy=false;chosen=null;
  renderInput(false);
  const l=document.createElement('div');l.className='cp-landing';
+ const cards=[
+  {k:'running',c:'',ic:'bars',tag:'Monitor',t:'Running campaigns',d:'Every campaign dialling right now, with records, attempted and connected at a glance.'},
+  {k:'under',c:'c2',ic:'funnel',tag:'Diagnose',t:'Below benchmark',d:`Campaigns below your ${critUnder.metric} criteria, ranked worst first.`},
+  {k:'attention',c:'c3',ic:'bell',tag:'Alert',t:'Needs attention',d:'Stalled or running below 60% connect, the ones to decide on now.'},
+  {k:'missed',c:'c5',ic:'phone',tag:'Recover',t:'Missed calls',d:'Inbound missed calls, how many agents dialled back, and who is still pending.'},
+  {k:'leads',c:'c6',ic:'donut',tag:'Leads',t:'Lead summary',d:'Leads ingested today, how many dialled and how many still pending.'},
+  {k:'create',c:'c4',ic:'plus',tag:'Create',t:'New campaign',d:'Set up a campaign, pick the dialer profile and schedule, then add segments.'}
+ ];
+ const legend=[{c:'#ee5a47',t:'Ask in natural language'},{c:'#1250de',t:'Proactive alerts'},{c:'#1ba672',t:'Act inline'},{c:'#faa21b',t:'One-click rechurn'}];
  l.innerHTML=`<div class="cp-greet"><div class="cp-mark">${I.aimark}</div>`+
-   `<div class="gt"><div class="hi">Hi Ajay,</div><div class="q">How can I help you today?</div></div></div>`+
-   `<div class="cp-sugs">`+cpSuggest.map(s=>`<button class="sug">${s}</button>`).join('')+
-   `<button class="sug more">More Suggestions ⌄</button></div>`;
+   `<div class="gt"><div class="hi">Hello, <b>Aman</b></div><div class="q">What would you like to analyse today?</div></div></div>`+
+   `<div class="cp-cards">`+cards.map(c=>`<button class="cpcard ${c.c}" data-k="${c.k}"><div class="cphead"><div class="ci">${I[c.ic]}</div><span class="ctag">${c.tag}</span></div><div class="ct">${c.t}</div><div class="cd">${c.d}</div></button>`).join('')+`</div>`+
+   `<div class="cp-legend">`+legend.map(g=>`<span class="leg"><i style="background:${g.c}"></i>${g.t}</span>`).join('')+`</div>`;
  body.appendChild(l);
- l.querySelectorAll('.sug:not(.more)').forEach((b,i)=>{b.onclick=()=>{const inp=document.getElementById('cpInput');if(inp)inp.value=cpSuggest[i];send();};});
+ l.querySelectorAll('.cpcard').forEach(b=>{ b.onclick=()=>launchCard(b.dataset.k); });
 }
 
 </script>
