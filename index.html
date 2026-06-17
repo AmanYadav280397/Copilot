@@ -233,6 +233,29 @@
   .detcard .dt .sgstat.on{background:#e6f6ef;color:#1ba672;}
   .detcard .dt .sgstat.off{background:#f1f3f6;color:var(--muted);}
   .seglabel{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--faint);margin:8px 0 2px;}
+  .detcard .dt .sgstat.active{background:#e6f6ef;color:#1ba672;}
+  .detcard .dt .sgstat.paused{background:var(--amberbg);color:#b9760a;}
+  .detcard .dt .sgstat.processed{background:var(--bluebg);color:var(--blue);}
+  .detcard .dt .sgstat.stopped{background:#fdebe8;color:#d2402c;}
+  .detfoot{padding:11px 14px;border-top:1px solid var(--line2);}
+  .detfoot .btn{padding:9px;}
+  .rectbl{width:100%;border-collapse:collapse;margin-top:2px;font-size:12.5px;}
+  .rectbl th{text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.4px;color:var(--faint);font-weight:700;padding:6px 8px;border-bottom:1px solid var(--line);}
+  .rectbl th.r,.rectbl td.r{text-align:right;}
+  .rectbl td{padding:7px 8px;border-bottom:1px solid var(--line2);color:var(--ink2);font-variant-numeric:tabular-nums;}
+  .rectbl td.rl{font-weight:600;}
+  .rectbl tr:last-child td{border-bottom:none;}
+  .rectbl .mut{color:var(--faint);}
+  .recb{display:inline-block;font-size:9.5px;font-weight:800;padding:2px 7px;border-radius:5px;margin-left:4px;text-transform:uppercase;letter-spacing:.3px;}
+  .recb.go{background:#e6f6ef;color:#1ba672;}.recb.no{background:#f1f3f6;color:var(--muted);}.recb.warn{background:var(--amberbg);color:#b9760a;}
+  .rcctl{display:flex;align-items:center;gap:10px;margin-top:11px;font-size:12.5px;color:var(--ink2);font-weight:600;}
+  .rcctl label{flex:0 0 auto;min-width:96px;}
+  .rcctl input[type=range]{flex:1;accent-color:var(--cyandk);}
+  .rcctl .rcpv{flex:0 0 auto;font-weight:800;color:var(--cyandk);min-width:40px;text-align:right;}
+  .rcctl select{flex:1;border:1px solid var(--line);border-radius:8px;padding:7px 9px;font-family:inherit;font-size:12.5px;color:var(--ink2);background:#fff;}
+  .rcout{margin-top:11px;background:var(--cyanbg);border-radius:9px;padding:9px 11px;font-size:12.5px;font-weight:600;color:#0d6a8f;}
+  .rcout b{font-weight:800;color:var(--cyandk);}
+  .rsum{margin-top:9px;font-size:12.5px;line-height:1.55;color:var(--ink2);}
   .chips{display:flex;flex-direction:column;gap:8px;}
   .chip{text-align:left;border:1px solid var(--line);background:#fff;color:var(--ink2);border-radius:32px;padding:9px 16px;font-size:12.5px;font-weight:600;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:8px;box-shadow:0 1px 2px rgba(15,23,34,.04);}
   .chip:hover{background:#fcfdfe;border-color:#d4d9e0;}
@@ -600,7 +623,7 @@ function campSegments(c){
    const noConn=Math.max(0,di-co), hsh=abbr(c.name).charCodeAt(0)+i*7;
    segs.push({
      name:"ACME_"+abbr(c.name)+"_"+abbr(slotLbls[i%slotLbls.length]),
-     status:(i%4===2)?'Paused':'Active', reach:t?Math.round(di/t*100):0,
+     status:['Active','Paused','Processed','Stopped'][i%4], reach:t?Math.round(di/t*100):0,
      total:t,dialled:di,connected:co, fresh:Math.max(0,t-di), retried:Math.round(noConn*0.31),
      avail:1+(hsh%4), online:agents.length, prof:d.prof,
      biz:bizHours[i%bizHours.length], inflight:di?(2+(hsh%9)):0,
@@ -610,10 +633,12 @@ function campSegments(c){
  return segs;
 }
 function renderSegmentDetail(s){
- const cov=s.total?Math.round(s.dialled/s.total*100):0, conn=s.dialled?Math.round(s.connected/s.dialled*100):0, on=s.status==='Active';
+ const cov=s.total?Math.round(s.dialled/s.total*100):0, conn=s.dialled?Math.round(s.connected/s.dialled*100):0;
+ const dot={Active:'#1ba672',Paused:'#f59e0b',Processed:'#1250de',Stopped:'#d2402c'}[s.status]||'#98a1ad';
+ const pulse=s.status==='Active'?'':';animation:none';
  const h=`<div class="detcard">
-   <div class="dt"><span class="cdot"${on?'':' style="background:#98a1ad;box-shadow:0 0 0 3px #eef0f3;animation:none"'}></span><span class="sgname">${s.name}</span>
-     <span class="rgrp"><span class="reach">Reach ${s.reach}%</span><span class="sgstat ${on?'on':'off'}">${s.status}</span></span></div>
+   <div class="dt"><span class="cdot" style="background:${dot};box-shadow:0 0 0 3px ${dot}22${pulse}"></span><span class="sgname">${s.name}</span>
+     <span class="rgrp"><span class="reach">Reach ${s.reach}%</span><span class="sgstat ${s.status.toLowerCase()}">${s.status}</span></span></div>
    <div class="dethead">
      <div class="hm"><div class="k">Total leads</div><div class="v">${s.total.toLocaleString()}</div></div>
      <div class="hm"><div class="k">Dialed leads</div><div class="v">${s.dialled.toLocaleString()}</div><div class="s">${cov}% of leads</div></div>
@@ -630,8 +655,10 @@ function renderSegmentDetail(s){
      <div class="detm"><div class="k">${I.funnel} Suppression numbers</div><div class="v">${s.supp.toLocaleString()}</div></div>
      <div class="detm" style="grid-column:1 / -1"><div class="k">${I.headset} Skill</div><div class="v" style="font-size:15px">${s.skill}</div></div>
    </div>
+   <div class="detfoot"><button class="btn alt segtele">${I.phone} Telephony action for this segment ›</button></div>
  </div>`;
  const el=botBlock(h); el.classList.add('wide');
+ el.querySelector('.segtele').onclick=()=>{ if(cpBusy)return; runTelephony(scopeMeta(s,true)); };
 }
 async function showSegments(c){
  if(cpBusy)return; cpBusy=true; userMsg('Show additional info');
@@ -642,12 +669,115 @@ async function showSegments(c){
  segs.forEach(s=>renderSegmentDetail(s));
  cpBusy=false; refocus();
 }
+// normalize a campaign or segment into a single scope object for telephony actions
+function scopeMeta(sc,isSeg){
+ if(isSeg)return{name:sc.name,total:sc.total,dialled:sc.dialled,connected:sc.connected,avail:sc.avail,prof:sc.prof,kind:'segment'};
+ const d=campDetail(sc);return{name:sc.name,total:sc.total,dialled:sc.dialled,connected:sc.connected,avail:d.avail,prof:d.prof,kind:'campaign'};
+}
+// split the not-connected pool by telephony outcome; retryHrs reflects the Outbound Retry Strategy
+function telephony(m){
+ const nc=Math.max(0,(m.dialled||0)-(m.connected||0));
+ const vm=Math.round(nc*0.38),busy=Math.round(nc*0.22),drop=Math.round(nc*0.14),inv=Math.round(nc*0.10);
+ const noans=Math.max(0,nc-vm-busy-drop-inv);
+ return{nc,rows:[
+  {key:'voicemail',label:'Voicemail',count:vm,retryHrs:5},
+  {key:'busy',label:'Busy',count:busy,retryHrs:0.5},
+  {key:'drop',label:'Call Drop',count:drop,retryHrs:2},
+  {key:'invalid',label:'Invalid number',count:inv,retryHrs:null},
+  {key:'noans',label:'No answer',count:noans,retryHrs:2}
+ ]};
+}
+function whenLabel(h){return h===null?'No retry':h<1?'+30 min':('+'+h+' hrs');}
+const PACING=2.5; let rcSeq=0;
+
+async function runTelephony(m){
+ if(cpBusy)return;cpBusy=true;
+ setScope('Scope: '+m.name+(m.kind==='segment'?' (segment)':''));
+ userMsg('Telephony action · '+m.name);
+ await typing();await toolCall("Campaign Monitoring","reads telephony outcomes "+(m.kind==='segment'?'for this segment':'for this campaign'));
+ const t=telephony(m);
+ const rowsHtml=t.rows.map(r=>`<tr><td class="rl">${r.label}</td><td class="r">${r.count.toLocaleString()}</td><td class="r mut">${t.nc?Math.round(r.count/t.nc*100):0}%</td></tr>`).join('');
+ botBlock(`<div class="wdg"><div class="wt">Calls by telephony outcome · ${m.kind}: ${m.name}</div>
+  <table class="rectbl"><tr><th>Outcome</th><th class="r">Calls</th><th class="r">Share</th></tr>${rowsHtml}
+  <tr><td class="rl">Total not connected</td><td class="r">${t.nc.toLocaleString()}</td><td class="r mut">100%</td></tr></table></div>`).classList.add('wide');
+ await botMsg(`${t.nc.toLocaleString()} calls didn't connect on ${m.name}. Want my recommendation on what to rechurn, or do you want to set the rechurn yourself?`);
+ const w=document.createElement('div');w.className='btnrow';w.style.marginTop='6px';
+ const r1=document.createElement('button');r1.className='btn go';r1.textContent='Recommendation';r1.onclick=()=>{if(cpBusy)return;runReco(m,t);};
+ const r2=document.createElement('button');r2.className='btn alt';r2.textContent='Rechurn Action';r2.onclick=()=>{if(cpBusy)return;runRechurn(m,t);};
+ w.appendChild(r1);w.appendChild(r2);body.appendChild(w);scroll();
+ cpStage=9;cpBusy=false;refocus();
+}
+
+async function runReco(m,t){
+ if(cpBusy)return;cpBusy=true;userMsg('Recommendation');
+ await typing();await toolCall("Retry strategy","reads Outbound Retry Strategy attached to "+m.name);
+ const cap=Math.max(40,Math.round(m.avail*PACING*18)); // approx dial attempts/hr at current pacing (concept)
+ const pct={voicemail:0.5,busy:1,drop:0.8,noans:0.7,invalid:0};
+ const lines=t.rows.map(r=>{
+   if(r.retryHrs===null)return{...r,rec:0,badge:'no',tag:'suppress'};
+   const p=pct[r.key]!=null?pct[r.key]:0.6;const rec=Math.round(r.count*p);
+   const badge=r.retryHrs<=0.5?'warn':'go';
+   return{...r,rec,p,badge,tag:badge==='warn'?'urgent':'rechurn'};
+ });
+ const recNow=lines.filter(l=>l.retryHrs!==null&&l.retryHrs<=2).reduce((a,l)=>a+l.rec,0);
+ const clear=(recNow/cap).toFixed(1);
+ const rowsHtml=lines.map(l=>`<tr><td class="rl">${l.label}</td><td class="r">${l.count.toLocaleString()}</td><td>${whenLabel(l.retryHrs)}</td><td>${l.retryHrs===null?'<span class="mut">do not rechurn</span>':Math.round(l.p*100)+'% ('+l.rec.toLocaleString()+')'}<span class="recb ${l.badge}">${l.tag}</span></td></tr>`).join('');
+ botBlock(`<div class="wdg"><div class="wt">Recommendation · Outbound Retry Strategy · ${m.name}</div>
+  <table class="rectbl"><tr><th>Outcome</th><th class="r">Calls</th><th>Retry rule</th><th>Recommend</th></tr>${rowsHtml}</table>
+  <div class="rsum"><b>Why:</b> dialer is ${m.prof} at ${PACING}:1 pacing with ${m.avail} agents available, roughly ${cap.toLocaleString()} dial attempts an hour. Busy redials after 30 minutes, a short window, so rechurn all of those now. Call drop and no answer redial after 2 hours, so push most of them now. Voicemail redials after 5 hours, so rechurn about half now and let the strategy pick up the rest. Invalid numbers have no retry rule, so suppress them. At ${cap.toLocaleString()} an hour, the ${recNow.toLocaleString()} priority retries clear in roughly ${clear} hours.</div></div>`).classList.add('wide');
+ const w=document.createElement('div');w.className='btnrow';w.style.marginTop='6px';
+ const a1=document.createElement('button');a1.className='btn go';a1.textContent='Apply as Rechurn Action';a1.onclick=()=>{if(cpBusy)return;runRechurn(m,t);};
+ w.appendChild(a1);body.appendChild(w);scroll();
+ cpBusy=false;refocus();
+}
+
+function runRechurn(m,t){
+ if(cpBusy)return;cpBusy=true;userMsg('Rechurn Action');
+ (async()=>{
+  await typing();await toolCall("Manage Leads","prepares rechurn by telephony outcome",true);
+  const id='rc'+(rcSeq++);
+  const rety=t.rows.filter(r=>r.retryHrs!==null), inv=t.rows.find(r=>r.retryHrs===null);
+  const rows=rety.map(r=>`<tr><td><input type="checkbox" class="rcck" data-n="${r.count}" data-key="${r.key}" checked></td><td class="rl">${r.label}</td><td class="r">${r.count.toLocaleString()}</td><td class="mut">${whenLabel(r.retryHrs)}</td></tr>`).join('');
+  const invRow=inv?`<tr><td><input type="checkbox" disabled></td><td class="rl mut">${inv.label}</td><td class="r mut">${inv.count.toLocaleString()}</td><td class="mut">No retry</td></tr>`:'';
+  const el=botBlock(`<div class="wdg" id="${id}"><div class="wt">Rechurn action · ${m.kind}: ${m.name}</div>
+   <table class="rectbl"><tr><th></th><th>Outcome</th><th class="r">Calls</th><th>Retry rule</th></tr>${rows}${invRow}</table>
+   <div class="rcctl"><label>Rechurn share</label><input type="range" min="10" max="100" step="10" value="100" class="rcpct"><span class="rcpv">100%</span></div>
+   <div class="rcctl"><label>Reschedule</label><select class="rcwhen"><option>Per retry strategy</option><option>Now</option><option>+30 min</option><option>+2 hours</option><option>+5 hours</option><option>Today 6 PM</option></select></div>
+   <div class="rcout">Will rechurn <b class="rccount">0</b> calls <span class="rcreach"></span></div>
+   <button class="btn go rcgo" style="margin-top:11px">Confirm rechurn</button></div>`);
+  el.classList.add('wide');
+  const root=el.querySelector('#'+id);
+  const cks=[...root.querySelectorAll('.rcck')], pct=root.querySelector('.rcpct'), pv=root.querySelector('.rcpv');
+  const out=root.querySelector('.rccount'), reach=root.querySelector('.rcreach'), whenSel=root.querySelector('.rcwhen');
+  const dialled=m.dialled||0;
+  function recompute(){
+   const p=+pct.value;pv.textContent=p+'%';let sum=0;
+   cks.forEach(c=>{if(c.checked)sum+=Math.round((+c.dataset.n)*p/100);});
+   out.textContent=sum.toLocaleString();
+   reach.textContent=dialled?'· '+(Math.round(sum/dialled*1000)/10)+'% of dialled':'';
+   return sum;
+  }
+  pct.oninput=recompute;cks.forEach(c=>c.onchange=recompute);recompute();
+  root.querySelector('.rcgo').onclick=async()=>{
+   if(cpBusy)return;cpBusy=true;
+   const sum=recompute(),when=whenSel.value,picked=cks.filter(c=>c.checked).map(c=>c.dataset.key);
+   rechurned.add(chosen.name);renderCampaigns();
+   showToast('Rechurn '+(when==='Now'?'started':'scheduled')+' · '+sum.toLocaleString()+' calls · '+m.name);
+   await botMsg(`Done. ${sum.toLocaleString()} calls on ${m.name} queued to rechurn by outcome (${picked.join(', ')}), schedule: ${when}. Captured in the campaign audit trail.`);
+   addAuditCard({what:`Rechurn · ${sum.toLocaleString()} calls · ${m.name} · outcomes: ${picked.join(', ')}`,who:'Ajay Gaur · via Campaign Copilot',when:when==='Now'?'just now':when});
+   const g=root.querySelector('.rcgo');g.disabled=true;g.textContent='Rechurn submitted';g.style.opacity='.6';
+   cpBusy=false;refocus();
+  };
+  cpBusy=false;refocus();
+ })();
+}
+
 function campOptions(c){
  const w=document.createElement('div'); w.className='btnrow'; w.style.marginTop='6px';
- const b1=document.createElement('button'); b1.className='btn go'; b1.textContent='Show additional info';
+ const b1=document.createElement('button'); b1.className='btn go'; b1.textContent='Show segment details';
  b1.onclick=()=>{ if(cpBusy)return; showSegments(c); };
- const b2=document.createElement('button'); b2.className='btn alt'; b2.textContent='Telephony breakdown';
- b2.onclick=async()=>{ if(cpBusy||cpStage!==2)return; cpBusy=true; userMsg('Telephony breakdown'); await stepReport(); cpStage=3; cpBusy=false; refocus(); };
+ const b2=document.createElement('button'); b2.className='btn alt'; b2.textContent='Telephony Action';
+ b2.onclick=()=>{ if(cpBusy)return; runTelephony(scopeMeta(c,false)); };
  w.appendChild(b1); w.appendChild(b2); body.appendChild(w); scroll();
 }
 async function chooseCampaign(c){if(cpBusy||cpStage!==1)return;cpBusy=true;chosen=c;setScope('Scope: '+c.name);userMsg(c.name);await typing();await toolCall("Reporting fetch","reads campaign detail for "+c.name);renderCampaignDetail(c);await botMsg(`Here's where ${c.name} stands right now. Pick an option below, or tell me what to do.`);cpStage=2;campOptions(c);cpBusy=false;refocus();}
