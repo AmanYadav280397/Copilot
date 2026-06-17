@@ -255,6 +255,11 @@
   .rcctl select{flex:1;border:1px solid var(--line);border-radius:8px;padding:7px 9px;font-family:inherit;font-size:12.5px;color:var(--ink2);background:#fff;}
   .rcout{margin-top:11px;background:var(--cyanbg);border-radius:9px;padding:9px 11px;font-size:12.5px;font-weight:600;color:#0d6a8f;}
   .rcout b{font-weight:800;color:var(--cyandk);}
+  .rcsh{width:46px;border:1px solid var(--line);border-radius:6px;padding:4px 5px;font-family:inherit;font-size:12px;text-align:right;color:var(--ink2);font-variant-numeric:tabular-nums;}
+  .rcsh:disabled{background:#f5f6f8;color:var(--faint);}
+  .rectbl td .rcsh+span,.rectbl td.r .pct{color:var(--faint);font-size:11px;margin-left:2px;}
+  .rco{font-weight:700;}
+  .rclink{background:none;border:none;color:var(--blue);font-weight:700;font-size:11.5px;cursor:pointer;font-family:inherit;padding:4px 0 0;}
   .rsum{margin-top:9px;font-size:12.5px;line-height:1.55;color:var(--ink2);}
   .chips{display:flex;flex-direction:column;gap:8px;}
   .chip{text-align:left;border:1px solid var(--line);background:#fff;color:var(--ink2);border-radius:32px;padding:9px 16px;font-size:12.5px;font-weight:600;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:8px;box-shadow:0 1px 2px rgba(15,23,34,.04);}
@@ -731,40 +736,58 @@ async function runReco(m,t){
  cpBusy=false;refocus();
 }
 
+// recommended rechurn share per outcome (matches the Recommendation card)
+const RECSHARE={voicemail:50,busy:100,drop:80,noans:70,invalid:0};
 function runRechurn(m,t){
  if(cpBusy)return;cpBusy=true;userMsg('Rechurn Action');
  (async()=>{
   await typing();await toolCall("Manage Leads","prepares rechurn by telephony outcome",true);
   const id='rc'+(rcSeq++);
-  const rety=t.rows.filter(r=>r.retryHrs!==null), inv=t.rows.find(r=>r.retryHrs===null);
-  const rows=rety.map(r=>`<tr><td><input type="checkbox" class="rcck" data-n="${r.count}" data-key="${r.key}" checked></td><td class="rl">${r.label}</td><td class="r">${r.count.toLocaleString()}</td><td class="mut">${whenLabel(r.retryHrs)}</td></tr>`).join('');
-  const invRow=inv?`<tr><td><input type="checkbox" disabled></td><td class="rl mut">${inv.label}</td><td class="r mut">${inv.count.toLocaleString()}</td><td class="mut">No retry</td></tr>`:'';
+  const rowsHtml=t.rows.map(r=>{
+    const noRetry=r.retryHrs===null, rec=RECSHARE[r.key]!=null?RECSHARE[r.key]:60;
+    return `<tr data-key="${r.key}" data-n="${r.count}">
+     <td><input type="checkbox" class="rcck" ${noRetry?'disabled':'checked'}></td>
+     <td class="rl${noRetry?' mut':''}">${r.label}</td>
+     <td class="r${noRetry?' mut':''}">${r.count.toLocaleString()}</td>
+     <td class="mut">${whenLabel(r.retryHrs)}</td>
+     <td class="r"><input type="number" class="rcsh" min="0" max="100" step="5" value="${rec}" ${noRetry?'disabled':''}><span class="pct">%</span></td>
+     <td class="r rco">0</td></tr>`;
+  }).join('');
   const el=botBlock(`<div class="wdg" id="${id}"><div class="wt">Rechurn action · ${m.kind}: ${m.name}</div>
-   <table class="rectbl"><tr><th></th><th>Outcome</th><th class="r">Calls</th><th>Retry rule</th></tr>${rows}${invRow}</table>
-   <div class="rcctl"><label>Rechurn share</label><input type="range" min="10" max="100" step="10" value="100" class="rcpct"><span class="rcpv">100%</span></div>
+   <table class="rectbl"><tr><th></th><th>Outcome</th><th class="r">Calls</th><th>Retry rule</th><th class="r">Share</th><th class="r">Rechurn</th></tr>${rowsHtml}</table>
+   <button class="rclink rcreset">Reset to recommended</button>
    <div class="rcctl"><label>Reschedule</label><select class="rcwhen"><option>Per retry strategy</option><option>Now</option><option>+30 min</option><option>+2 hours</option><option>+5 hours</option><option>Today 6 PM</option></select></div>
    <div class="rcout">Will rechurn <b class="rccount">0</b> calls <span class="rcreach"></span></div>
    <button class="btn go rcgo" style="margin-top:11px">Confirm rechurn</button></div>`);
   el.classList.add('wide');
   const root=el.querySelector('#'+id);
-  const cks=[...root.querySelectorAll('.rcck')], pct=root.querySelector('.rcpct'), pv=root.querySelector('.rcpv');
+  const trs=[...root.querySelectorAll('tr[data-key]')];
   const out=root.querySelector('.rccount'), reach=root.querySelector('.rcreach'), whenSel=root.querySelector('.rcwhen');
   const dialled=m.dialled||0;
   function recompute(){
-   const p=+pct.value;pv.textContent=p+'%';let sum=0;
-   cks.forEach(c=>{if(c.checked)sum+=Math.round((+c.dataset.n)*p/100);});
+   let sum=0;
+   trs.forEach(tr=>{
+    const ck=tr.querySelector('.rcck'), sh=tr.querySelector('.rcsh');
+    let v=0;
+    if(ck&&ck.checked&&sh&&!sh.disabled){const p=Math.max(0,Math.min(100,+sh.value||0));v=Math.round((+tr.dataset.n)*p/100);}
+    tr.querySelector('.rco').textContent=v.toLocaleString();sum+=v;
+   });
    out.textContent=sum.toLocaleString();
    reach.textContent=dialled?'· '+(Math.round(sum/dialled*1000)/10)+'% of dialled':'';
    return sum;
   }
-  pct.oninput=recompute;cks.forEach(c=>c.onchange=recompute);recompute();
+  root.querySelectorAll('.rcsh').forEach(i=>i.oninput=recompute);
+  root.querySelectorAll('.rcck').forEach(c=>c.onchange=recompute);
+  root.querySelector('.rcreset').onclick=()=>{trs.forEach(tr=>{const sh=tr.querySelector('.rcsh'),ck=tr.querySelector('.rcck');if(sh&&!sh.disabled)sh.value=(RECSHARE[tr.dataset.key]!=null?RECSHARE[tr.dataset.key]:60);if(ck&&!ck.disabled)ck.checked=true;});recompute();};
+  recompute();
   root.querySelector('.rcgo').onclick=async()=>{
    if(cpBusy)return;cpBusy=true;
-   const sum=recompute(),when=whenSel.value,picked=cks.filter(c=>c.checked).map(c=>c.dataset.key);
+   const sum=recompute(),when=whenSel.value;
+   const picked=trs.filter(tr=>{const ck=tr.querySelector('.rcck'),sh=tr.querySelector('.rcsh');return ck&&ck.checked&&sh&&!sh.disabled&&(+sh.value>0);}).map(tr=>tr.dataset.key+' '+tr.querySelector('.rcsh').value+'%');
    rechurned.add(chosen.name);renderCampaigns();
    showToast('Rechurn '+(when==='Now'?'started':'scheduled')+' · '+sum.toLocaleString()+' calls · '+m.name);
    await botMsg(`Done. ${sum.toLocaleString()} calls on ${m.name} queued to rechurn by outcome (${picked.join(', ')}), schedule: ${when}. Captured in the campaign audit trail.`);
-   addAuditCard({what:`Rechurn · ${sum.toLocaleString()} calls · ${m.name} · outcomes: ${picked.join(', ')}`,who:'Ajay Gaur · via Campaign Copilot',when:when==='Now'?'just now':when});
+   addAuditCard({what:`Rechurn · ${sum.toLocaleString()} calls · ${m.name} · ${picked.join(', ')}`,who:'Ajay Gaur · via Campaign Copilot',when:when==='Now'?'just now':when});
    const g=root.querySelector('.rcgo');g.disabled=true;g.textContent='Rechurn submitted';g.style.opacity='.6';
    cpBusy=false;refocus();
   };
