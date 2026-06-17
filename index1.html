@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Purpose Based Form</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      background: #222;
+      padding: 25px;
+      border-radius: 10px;
+      width: 320px;
+      text-align: center;
+    }
+
+    input, button {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border: none;
+      border-radius: 5px;
+    }
+
+    input {
+      background: #333;
+      color: white;
+    }
+
+    button {
+      background: #00bcd4;
+      color: black;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #00e5ff;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .result {
+      margin-top: 15px;
+      background: #333;
+      padding: 10px;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- Purpose Section -->
+  <div id="purposeSection">
+    <h2>Enter Purpose</h2>
+    <input type="text" id="purpose" placeholder="e.g. registration, login">
+    <button onclick="showForm()">Continue</button>
+  </div>
+
+  <!-- User Form -->
+  <div id="formSection" class="hidden">
+    <h2>Enter Details</h2>
+    <input type="text" id="name" placeholder="Enter Name">
+    <input type="number" id="age" placeholder="Enter Age">
+    <input type="email" id="email" placeholder="Enter Email">
+    <button onclick="showDetails()">Submit</button>
+  </div>
+
+  <!-- Result -->
+  <div id="resultSection" class="hidden result"></div>
+
+</div>
+
+<script>
+  function showForm() {
+    let purpose = document.getElementById("purpose").value;
+
+    if (purpose.trim() === "") {
+      alert("Please enter a purpose");
+      return;
+    }
+
+    document.getElementById("purposeSection").classList.add("hidden");
+    document.getElementById("formSection").classList.remove("hidden");
+  }
+
+  function showDetails() {
+    let name = document.getElementById("name").value;
+    let age = document.getElementById("age").value;
+    let email = document.getElementById("email").value;
+
+    if (!name || !age || !email) {
+      alert("Please fill all fields");
+      return;
+    }
+
+    document.getElementById("formSection").classList.add("hidden");
+
+    document.getElementById("resultSection").classList.remove("hidden");
+    document.getElementById("resultSection").innerHTML = `
+      <h3>Submitted Details</h3>
+      <p><b>Name:</b> ${name}</p>
+      <p><b>Age:</b> ${age}</p>
+      <p><b>Email:</b> ${email}</p>
+    `;
+  }
+</script>
+
+</body>
+</html>
