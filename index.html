@@ -211,6 +211,28 @@
   .cpill.connected{background:#e6f6ef;color:#1ba672;}
   .cpill.ac{background:var(--acbg);color:var(--ac);}
   .cpill.retry{background:var(--amberbg);color:#b9760a;}
+  .detcard{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-top:4px;}
+  .detcard .dt{font-weight:700;font-size:15.5px;color:var(--ink2);padding:13px 16px 11px;display:flex;align-items:center;gap:9px;border-bottom:1px solid var(--line2);}
+  .detcard .dt .cdot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 0 3px #e6f6ef;animation:dotp 1.6s infinite;flex:0 0 auto;}
+  .dethead{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line2);}
+  .dethead .hm{background:#fbfcfe;padding:13px 16px;}
+  .dethead .hm .k{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--faint);margin-bottom:6px;}
+  .dethead .hm .v{font-size:21px;font-weight:800;color:var(--ink2);font-variant-numeric:tabular-nums;line-height:1;}
+  .dethead .hm .s{font-size:11px;font-weight:600;color:var(--muted);margin-top:5px;}
+  .detgrid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line2);border-top:1px solid var(--line2);}
+  .detm{background:#fff;padding:13px 16px;}
+  .detm .k{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--faint);margin-bottom:7px;display:flex;align-items:center;gap:6px;}
+  .detm .k svg{width:13px;height:13px;color:var(--cyandk);}
+  .detm .v{font-size:19px;font-weight:800;color:var(--ink2);font-variant-numeric:tabular-nums;line-height:1;}
+  .detm .v .s{font-size:12px;font-weight:600;color:var(--muted);}
+  .detm .s2{font-size:11px;font-weight:600;color:var(--muted);margin-top:5px;}
+  .detcard .dt .sgname{flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;font-size:13px;}
+  .detcard .dt .rgrp{margin-left:auto;display:flex;align-items:center;gap:6px;flex:0 0 auto;}
+  .detcard .dt .reach{font-size:10.5px;font-weight:700;color:var(--muted);background:#eef1f4;padding:3px 9px;border-radius:999px;white-space:nowrap;}
+  .detcard .dt .sgstat{font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:999px;white-space:nowrap;}
+  .detcard .dt .sgstat.on{background:#e6f6ef;color:#1ba672;}
+  .detcard .dt .sgstat.off{background:#f1f3f6;color:var(--muted);}
+  .seglabel{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--faint);margin:8px 0 2px;}
   .chips{display:flex;flex-direction:column;gap:8px;}
   .chip{text-align:left;border:1px solid var(--line);background:#fff;color:var(--ink2);border-radius:32px;padding:9px 16px;font-size:12.5px;font-weight:600;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:8px;box-shadow:0 1px 2px rgba(15,23,34,.04);}
   .chip:hover{background:#fcfdfe;border-color:#d4d9e0;}
@@ -528,7 +550,107 @@ async function stepList(){await typing();await toolCall("Reporting fetch","count
 async function stepFilter(r){await typing();await toolCall("Reporting fetch",`searches all ${TOTAL} campaigns for “${r.toks.join(' ')}”`);await botMsg(`Of your ${TOTAL} campaigns, ${r.matches.length} match “${r.toks.join(' ')}”. Tap one to dive in.`);renderCampaignList(r.matches);}
 async function stepNoMatch(r){await typing();await toolCall("Reporting fetch",`searches all ${TOTAL} campaigns`);await botMsg(`I searched all ${TOTAL} campaigns but found none matching “${r?r.toks.join(' '):'that'}”. Try a theme like renewal, win-back, collections, upsell or loyalty.`);}
 async function routeList(v,fallback){const low=(v||'').toLowerCase();const r=v?matchCampaigns(v):null;if(!v||/running|right now|active|dial/.test(low)){await stepList();return;}if(r&&r.matches.length){await stepFilter(r);return;}if(/\b(all|only|every|filter)\b/.test(low)){await stepNoMatch(r);return;}await fallback();}
-async function chooseCampaign(c){if(cpBusy||cpStage!==1)return;cpBusy=true;chosen=c;setScope('Scope: '+c.name);userMsg(c.name);await typing();await botMsg(`Scoped to ${c.name}. Ask me for today's report, or tell me what to do.`);cpStage=2;renderSugs(cpDrill);cpBusy=false;refocus();}
+// derive the per-campaign drill-down metrics: fresh, retried, agents, dialer profile
+function campDetail(c){
+ const fresh=Math.max(0,c.total-(c.dialled||0));
+ const noConn=Math.max(0,(c.dialled||0)-(c.connected||0));
+ const retried=Math.round(noConn*0.31);
+ const profiles=['Predictive','Progressive','Preview'];
+ const prof=c.dialer||profiles[abbr(c.name).length%3];
+ const online=agents.length;
+ const avail=2+(abbr(c.name).charCodeAt(0)%4); // deterministic 2..5
+ return {fresh,retried,prof,avail,online};
+}
+function renderCampaignDetail(c){
+ const d=campDetail(c);
+ const cov=c.total?Math.round((c.dialled||0)/c.total*100):0;
+ const conn=c.dialled?Math.round(c.connected/c.dialled*100):0;
+ const started=!!c.dialled;
+ const h=`<div class="detcard">
+   <div class="dt"><span class="cdot"></span>${c.name}</div>
+   <div class="dethead">
+     <div class="hm"><div class="k">Total leads</div><div class="v">${c.total.toLocaleString()}</div></div>
+     <div class="hm"><div class="k">Dialed leads</div><div class="v">${(c.dialled||0).toLocaleString()}</div><div class="s">${started?cov+'% of leads':'not started'}</div></div>
+     <div class="hm"><div class="k">Connected leads</div><div class="v">${(c.connected||0).toLocaleString()}</div><div class="s">${started?conn+'% of dialed':'—'}</div></div>
+   </div>
+   <div class="detgrid">
+     <div class="detm"><div class="k">${I.spark} Fresh leads</div><div class="v">${d.fresh.toLocaleString()}</div><div class="s2">not yet dialed</div></div>
+     <div class="detm"><div class="k">${I.refresh} Retried leads</div><div class="v">${d.retried.toLocaleString()}</div><div class="s2">re-attempted</div></div>
+     <div class="detm"><div class="k">${I.people} Available agents</div><div class="v">${d.avail} <span class="s">of ${d.online} online</span></div></div>
+     <div class="detm"><div class="k">${I.dialer} Dialer profile</div><div class="v" style="font-size:15px">${d.prof}</div></div>
+   </div>
+ </div>`;
+ const el=botBlock(h);el.classList.add('wide');
+}
+// derive segment-wise breakdown for a campaign: splits the totals and adds operational detail
+function campSegments(c){
+ const d=campDetail(c);
+ const n=3+(abbr(c.name).length%2); // 3 or 4 segments
+ const slotLbls=["Weekday 9AM-12PM","Weekday 12PM-3PM","Weekday 3PM-6PM","Saturday 9AM-3PM"];
+ const bizHours=["9 AM - 6 PM","10 AM - 7 PM","9 AM - 1 PM","8 AM - 8 PM"];
+ const dialPlans=["Default","TRAI-1600 safe","DND-filtered","After-hours"];
+ const skills=["Retention","Collections","Sales","Support"];
+ const segs=[]; let rt=c.total, rd=c.dialled||0, rc=c.connected||0;
+ for(let i=0;i<n;i++){
+   const last=i===n-1;
+   const t=last?rt:Math.round(c.total/n);
+   const di=last?rd:Math.round((c.dialled||0)/n);
+   const co=last?rc:Math.round((c.connected||0)/n);
+   rt-=t; rd-=di; rc-=co;
+   const noConn=Math.max(0,di-co), hsh=abbr(c.name).charCodeAt(0)+i*7;
+   segs.push({
+     name:"ACME_"+abbr(c.name)+"_"+abbr(slotLbls[i%slotLbls.length]),
+     status:(i%4===2)?'Paused':'Active', reach:t?Math.round(di/t*100):0,
+     total:t,dialled:di,connected:co, fresh:Math.max(0,t-di), retried:Math.round(noConn*0.31),
+     avail:1+(hsh%4), online:agents.length, prof:d.prof,
+     biz:bizHours[i%bizHours.length], inflight:di?(2+(hsh%9)):0,
+     plan:dialPlans[i%dialPlans.length], supp:300+((hsh*137)%1700), skill:skills[i%skills.length]
+   });
+ }
+ return segs;
+}
+function renderSegmentDetail(s){
+ const cov=s.total?Math.round(s.dialled/s.total*100):0, conn=s.dialled?Math.round(s.connected/s.dialled*100):0, on=s.status==='Active';
+ const h=`<div class="detcard">
+   <div class="dt"><span class="cdot"${on?'':' style="background:#98a1ad;box-shadow:0 0 0 3px #eef0f3;animation:none"'}></span><span class="sgname">${s.name}</span>
+     <span class="rgrp"><span class="reach">Reach ${s.reach}%</span><span class="sgstat ${on?'on':'off'}">${s.status}</span></span></div>
+   <div class="dethead">
+     <div class="hm"><div class="k">Total leads</div><div class="v">${s.total.toLocaleString()}</div></div>
+     <div class="hm"><div class="k">Dialed leads</div><div class="v">${s.dialled.toLocaleString()}</div><div class="s">${cov}% of leads</div></div>
+     <div class="hm"><div class="k">Connected leads</div><div class="v">${s.connected.toLocaleString()}</div><div class="s">${conn}% of dialed</div></div>
+   </div>
+   <div class="detgrid">
+     <div class="detm"><div class="k">${I.spark} Fresh leads</div><div class="v">${s.fresh.toLocaleString()}</div></div>
+     <div class="detm"><div class="k">${I.refresh} Retried leads</div><div class="v">${s.retried.toLocaleString()}</div></div>
+     <div class="detm"><div class="k">${I.people} Available agents</div><div class="v">${s.avail} <span class="s">of ${s.online}</span></div></div>
+     <div class="detm"><div class="k">${I.dialer} Dialer profile</div><div class="v" style="font-size:15px">${s.prof}</div></div>
+     <div class="detm"><div class="k">${I.cal} Business hours</div><div class="v" style="font-size:14px">${s.biz}</div></div>
+     <div class="detm"><div class="k">${I.phone} Inflight calls</div><div class="v">${s.inflight}</div></div>
+     <div class="detm"><div class="k">${I.routing} Dial plan</div><div class="v" style="font-size:14px">${s.plan}</div></div>
+     <div class="detm"><div class="k">${I.funnel} Suppression numbers</div><div class="v">${s.supp.toLocaleString()}</div></div>
+     <div class="detm" style="grid-column:1 / -1"><div class="k">${I.headset} Skill</div><div class="v" style="font-size:15px">${s.skill}</div></div>
+   </div>
+ </div>`;
+ const el=botBlock(h); el.classList.add('wide');
+}
+async function showSegments(c){
+ if(cpBusy)return; cpBusy=true; userMsg('Show additional info');
+ await typing(); await toolCall("Reporting fetch","reads segment-level data for "+c.name);
+ const segs=campSegments(c);
+ await botMsg(`${c.name} has ${segs.length} segments. Here's each one segment-wise, with reach, status and operational detail.`);
+ const lbl=document.createElement('div'); lbl.className='msg bot wide'; lbl.innerHTML=`<div class="mk">${I.aimark}</div><div class="bc"><div class="b"><div class="seglabel">Segment-wise detail · ${segs.length} segments</div></div></div>`; body.appendChild(lbl);
+ segs.forEach(s=>renderSegmentDetail(s));
+ cpBusy=false; refocus();
+}
+function campOptions(c){
+ const w=document.createElement('div'); w.className='btnrow'; w.style.marginTop='6px';
+ const b1=document.createElement('button'); b1.className='btn go'; b1.textContent='Show additional info';
+ b1.onclick=()=>{ if(cpBusy)return; showSegments(c); };
+ const b2=document.createElement('button'); b2.className='btn alt'; b2.textContent='Telephony breakdown';
+ b2.onclick=async()=>{ if(cpBusy||cpStage!==2)return; cpBusy=true; userMsg('Telephony breakdown'); await stepReport(); cpStage=3; cpBusy=false; refocus(); };
+ w.appendChild(b1); w.appendChild(b2); body.appendChild(w); scroll();
+}
+async function chooseCampaign(c){if(cpBusy||cpStage!==1)return;cpBusy=true;chosen=c;setScope('Scope: '+c.name);userMsg(c.name);await typing();await toolCall("Reporting fetch","reads campaign detail for "+c.name);renderCampaignDetail(c);await botMsg(`Here's where ${c.name} stands right now. Pick an option below, or tell me what to do.`);cpStage=2;campOptions(c);cpBusy=false;refocus();}
 async function stepReport(){const c=chosen,o=outcomes(c);await typing();await toolCall("Reporting fetch","reads lead-level data for "+c.name);await botMsg(`On ${c.name}: ${o.dialled.toLocaleString()} of ${c.total.toLocaleString()} leads dialled so far, ${o.connected.toLocaleString()} connected — a ${o.rate}% connect rate (connected of dialled). ${o.noConnect.toLocaleString()} dialled leads didn't connect.`);await typing();await toolCall("Reporting fetch","groups the "+o.noConnect.toLocaleString()+" leads by last telephony outcome");botWidget("Didn't connect · last telephony outcome",[{label:"Voicemail",val:o.voicemail,color:"#f59e0b"},{label:"Busy",val:o.busy,color:"#1250de"},{label:"Switched off / invalid",val:o.unreachable,color:"#c2ccd6"}]);await botMsg(`${o.voicemail.toLocaleString()} leads hit voicemail and ${o.busy.toLocaleString()} were busy, so ${o.eligible.toLocaleString()} leads are callable again. The ${o.unreachable.toLocaleString()} switched-off or invalid leads can't be rechurned, so I left them out.`);await botMsg("Basis: Campaign Monitoring, last telephony outcome.");guard(`Rechurning retries live leads, so I'll <b>confirm before I act</b>. Reply <b>rechurn</b> to retry all ${o.eligible.toLocaleString()} leads, or <b>schedule</b> for 6 PM.`);}
 async function stepRechurn(txt){const c=chosen,o=outcomes(c);const sched=/sched|later|6|pm|evening|tonight/i.test(txt);await typing();await toolCall("Rechurn · Manage Leads","retries the chosen leads by call outcome",true);rechurned.add(c.name);renderCampaigns();showToast("Rechurn "+(sched?"scheduled":"done")+" · "+o.eligible.toLocaleString()+" leads · captured in campaign audit trail");await botMsg(sched?`Scheduled. ${o.eligible.toLocaleString()} leads on ${c.name} will rechurn at 6 PM, set to Retry Scheduled. Captured in the campaign audit trail.`:`Done. ${o.eligible.toLocaleString()} leads on ${c.name} set to Retry Scheduled and rechurned by call outcome, voicemail and busy. Captured in the campaign audit trail.`);addAuditCard({what:`Rechurn · ${o.eligible.toLocaleString()} leads · ${c.name} · telephony outcome: voicemail, busy`,who:"Ajay Gaur · via Campaign Copilot",when:sched?"scheduled for 6:00 PM today":"just now"});botBlock('<div class="payoff"><b>From a question to done, in chat.</b><span class="small">The old way: open Manage Leads, filter by outcome, set the rechurn by hand.</span></div>');}
 async function send(){
