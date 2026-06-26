@@ -199,6 +199,8 @@
   .tool.done .sp{border:none;animation:none;background:var(--green);position:relative;}
   .tool.done .sp::after{content:"✓";color:#fff;font-size:9px;font-weight:900;position:absolute;inset:0;display:flex;align-items:center;justify-content:center;}
   .tool .nm{font-weight:700;}.tool .ds{color:var(--faint);font-size:11px;}
+  .tool .tool-agents{margin-top:4px;font-size:10px;font-weight:700;color:#5b21b6;display:flex;align-items:center;gap:2px;flex-wrap:wrap;}
+  .tool .tool-agents .subagent-arrow{color:#a78bfa;font-size:8px;}
   .tool .vtag{margin-left:auto;font-size:8.5px;font-weight:800;letter-spacing:.5px;color:var(--cyandk);background:var(--cyanbg);padding:2px 6px;border-radius:5px;}
   @keyframes spin{to{transform:rotate(360deg);}}
   .typing{display:flex;gap:4px;padding:11px 12px;background:#f3f6f9;border-radius:13px;width:fit-content;}
@@ -293,6 +295,12 @@
   .nprow:last-child{border-bottom:none;}
   .nprow span{color:var(--muted);} .nprow b{color:var(--ink2);font-weight:700;text-align:right;}
   .ncform{display:flex;flex-direction:column;}
+  .nc2col.split{column-gap:18px;}
+  .nc2col.split .ncprev{align-self:start;position:sticky;top:0;border:1px solid var(--line);border-radius:12px;}
+  .nc2col.split .ncform{padding-left:2px;}
+  .ncprev .modbtn{display:block;width:100%;text-align:left;background:#fff;border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:12px;font-weight:700;color:var(--cyandk);cursor:pointer;font-family:inherit;margin-bottom:7px;}
+  .ncprev .modbtn:hover{background:var(--cyanbg);}
+  .amdsub{border-left:2px solid var(--line);padding-left:8px;margin:2px 0;}
   .rsum{margin-top:9px;font-size:12.5px;line-height:1.55;color:var(--ink2);}
   .segwrap{overflow-x:auto;margin-top:4px;border:1px solid var(--line);border-radius:10px;}
   .segtbl{border-collapse:collapse;font-size:12px;white-space:nowrap;min-width:100%;}
@@ -327,6 +335,65 @@
   .toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%) translateY(20px);background:#1c2330;color:#fff;border-radius:10px;padding:12px 16px;font-size:13px;font-weight:600;box-shadow:0 12px 36px rgba(0,0,0,.3);opacity:0;transition:.3s;z-index:50;display:flex;align-items:center;gap:9px;}
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
   .toast .ck{width:20px;height:20px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;}
+
+  /* ===== history panel (third pane left) ===== */
+  .cp-history-pane{position:absolute;top:0;left:-320px;bottom:0;width:310px;background:#fff;border-right:1px solid var(--line);box-shadow:4px 0 20px rgba(15,23,34,.08);z-index:42;display:flex;flex-direction:column;transition:left .3s cubic-bezier(.3,.8,.3,1),opacity .3s;opacity:0;pointer-events:none;}
+  .cp-history-pane.open{left:0;opacity:1;pointer-events:auto;}
+  .hist-head{display:flex;align-items:center;gap:10px;padding:14px 14px 10px;border-bottom:1px solid var(--line);flex:0 0 auto;}
+  .hist-head .ht{font-weight:800;font-size:14px;color:var(--ink2);flex:1;}
+  .hist-head .hcls{width:26px;height:26px;border-radius:7px;border:none;background:#f3f5f8;color:var(--muted);cursor:pointer;font-size:15px;}
+  .hist-head .hcls:hover{background:#e9edf2;color:var(--ink);}
+  .hist-search{padding:8px 12px;border-bottom:1px solid var(--line2);flex:0 0 auto;}
+  .hist-search input{width:100%;border:1px solid var(--line);border-radius:8px;padding:7px 10px;font-size:12.5px;font-family:inherit;outline:none;color:var(--ink);}
+  .hist-search input:focus{border-color:#d4d9e0;}
+  .hist-list{flex:1 1 auto;overflow-y:auto;padding:6px 0;}
+  .hist-item{display:flex;flex-direction:column;gap:3px;padding:10px 14px;cursor:pointer;border-bottom:1px solid var(--line2);transition:background .12s;}
+  .hist-item:hover{background:#f8f9fb;}
+  .hist-item.active{background:var(--bluebg);border-left:3px solid var(--blue);}
+  .hist-item .hi-title{font-weight:700;font-size:12.5px;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .hist-item .hi-meta{display:flex;align-items:center;gap:6px;font-size:10.5px;color:var(--faint);}
+  .hist-item .hi-tag{font-size:9px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;padding:2px 6px;border-radius:4px;background:#f1f3f6;color:var(--muted);}
+  .hist-item .hi-tag.monitor{background:#e6f7fd;color:var(--cyandk);}
+  .hist-item .hi-tag.diagnose{background:var(--amberbg);color:#b9760a;}
+  .hist-item .hi-tag.alert{background:#fdebe8;color:#d2402c;}
+  .hist-item .hi-tag.recover{background:var(--bluebg);color:var(--blue);}
+  .hist-item .hi-tag.create{background:#e6f6ef;color:#1ba672;}
+  .hist-item .hi-tag.leads{background:var(--purplebg);color:var(--purple);}
+
+  /* ===== copilot header history button ===== */
+  .cp-head .histbtn{width:28px;height:28px;border-radius:7px;border:none;background:#f3f5f8;color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;flex:0 0 auto;}
+  .cp-head .histbtn svg{width:15px;height:15px;}
+  .cp-head .histbtn:hover{background:#e9edf2;color:var(--ink);}
+  .cp-head .histbtn.on{background:var(--bluebg);color:var(--blue);}
+
+  /* ===== scope / query / sub-agent context strip ===== */
+  .cp-ctx-strip{display:flex;flex-direction:column;gap:3px;margin-top:2px;}
+  .cp-ctx-row{font-size:10.5px;font-weight:700;padding:3px 8px;border-radius:999px;display:inline-flex;align-items:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;width:fit-content;}
+  .cp-ctx-row.scope{color:var(--cyandk);background:var(--cyanbg);}
+  .cp-ctx-row.query{color:#6a5300;background:#fef8e8;margin-top:1px;}
+  .cp-ctx-row.subagent{color:#5b21b6;background:#f3eeff;margin-top:1px;gap:4px;}
+  .subagent-arrow{color:#a78bfa;font-weight:800;font-size:9px;margin:0 1px;}
+
+  /* ===== inline suggestions (Image 5 style) ===== */
+  .cp-inline-sugs{display:flex;flex-direction:column;align-items:center;gap:8px;padding:4px 0;margin:4px 0 2px 42px;max-width:420px;}
+  .cp-inline-sugs .sug-chip{background:#fff;border:1px solid var(--line);border-radius:32px;padding:10px 18px;font-size:13.5px;font-weight:500;color:var(--ink2);cursor:pointer;font-family:inherit;text-align:left;width:100%;box-shadow:0 1px 2px rgba(15,23,34,.03);transition:border-color .12s,background .12s;line-height:1.4;}
+  .cp-inline-sugs .sug-chip:hover{border-color:#d4d9e0;background:#fcfdfe;}
+  .cp-more-btn{display:inline-flex;align-items:center;gap:6px;background:#fff;border:1px solid var(--line);border-radius:32px;padding:9px 18px;font-size:13.5px;font-weight:500;color:var(--muted);cursor:pointer;font-family:inherit;margin-top:2px;transition:border-color .12s;}
+  .cp-more-btn:hover{border-color:#d4d9e0;color:var(--ink2);}
+  .cp-more-btn svg{width:12px;height:12px;transition:transform .2s;}
+  .cp-more-btn.open svg{transform:rotate(180deg);}
+  .cp-more-drop{display:none;width:100%;background:#fff;border:1px solid var(--line);border-radius:14px;margin-top:6px;box-shadow:0 4px 16px rgba(15,23,34,.08);overflow:hidden;max-height:200px;}
+  .cp-more-drop.open{display:flex;flex-direction:column;}
+  .cp-more-drop .md-search{padding:8px 10px;border-bottom:1px solid var(--line2);}
+  .cp-more-drop .md-search input{width:100%;border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-size:12px;font-family:inherit;outline:none;color:var(--ink);}
+  .cp-more-drop .md-search input:focus{border-color:#d4d9e0;}
+  .cp-more-drop .md-list{flex:1;overflow-y:auto;max-height:140px;}
+  .cp-more-drop .md-item{padding:9px 14px;cursor:pointer;font-size:13px;font-weight:500;color:var(--ink2);border-bottom:1px solid var(--line2);transition:background .1s;}
+  .cp-more-drop .md-item:last-child{border-bottom:none;}
+  .cp-more-drop .md-item:hover{background:#f8f9fb;}
+
+  /* drawer relative for overlay positioning */
+  .drawer{position:fixed;overflow:visible;}
 </style>
 </head>
 <body>
@@ -365,11 +432,25 @@
 
   <div class="scrim" id="scrim"></div>
   <div class="drawer" id="drawer">
+    <!-- History pane (slides in from left) -->
+    <div class="cp-history-pane" id="histpane">
+      <div class="hist-head"><span class="ht">History</span><button class="hcls" id="histclose">&times;</button></div>
+      <div class="hist-search"><input type="text" id="histsearch" placeholder="Search history"></div>
+      <div class="hist-list" id="histlist"></div>
+    </div>
     <div class="cp-head">
       <button class="cphome" id="cophome" aria-label="Home" title="Home"><svg viewBox="0 0 24 24"><path d="M4 11l8-7 8 7M6 10v9h12v-9"/></svg></button>
-      <div><div class="t">Campaign Copilot</div><span class="ctx" id="cpctx">Scope: all campaigns</span></div>
+      <button class="histbtn" id="histtoggle" aria-label="History" title="History"><svg viewBox="0 0 24 24"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="9"/><path d="M3 12a9 9 0 019-9"/></svg></button>
+      <div style="flex:1;min-width:0;">
+        <div class="t">Campaign Copilot</div>
+        <div class="cp-ctx-strip" id="cpctxstrip">
+          <span class="cp-ctx-row scope" id="cpctx">Scope: all campaigns</span>
+          <span class="cp-ctx-row query" id="cpquery" style="display:none"></span>
+          <span class="cp-ctx-row subagent" id="cpsubagent" style="display:none"></span>
+        </div>
+      </div>
       <button class="cpmax" id="copmax" aria-label="Maximize"><svg viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></button>
-      <button class="cls" id="copclose">×</button>
+      <button class="cls" id="copclose">&times;</button>
     </div>
     <div class="cp-body" id="cpbody"></div>
     <div class="cp-foot" id="cpfoot"></div>
@@ -558,6 +639,156 @@ const C={dialled:50000,connected:32000,noConnect:18000,voicemail:11000,busy:4500
  get eligible(){return this.voicemail+this.busy;},get rate(){return(this.connected/this.dialled*100).toFixed(1);}};
 const DEMO="Q2 Win-back";
 function setScope(t){document.getElementById('cpctx').textContent=t;}
+function setQuery(q){const el=document.getElementById('cpquery');if(q){el.textContent='Query: '+q;el.style.display='';} else {el.style.display='none';}}
+function setSubAgent(agents){const el=document.getElementById('cpsubagent');if(agents&&agents.length){el.innerHTML='Sub Agent: '+agents.map((a,i)=>i<agents.length-1?a+'<span class="subagent-arrow"> &#9654; </span>':a).join('');el.style.display='';} else {el.style.display='none';}}
+function resetCtx(){setScope('Scope: all campaigns');setQuery('');setSubAgent(null);}
+
+/* ===== History panel ===== */
+const HISTORY_DATA=[
+ {id:'h1',title:'Rechurn Q2 Win-back by telephony',tag:'monitor',tagLabel:'Monitor',time:'Today, 09:15 AM',module:'Running campaigns',query:'Rechurn voicemail + busy leads'},
+ {id:'h2',title:'Below benchmark analysis',tag:'diagnose',tagLabel:'Diagnose',time:'Today, 08:40 AM',module:'Below benchmark',query:'Campaigns under 64% connect rate'},
+ {id:'h3',title:'Missed calls dial-back review',tag:'recover',tagLabel:'Recover',time:'Yesterday, 04:20 PM',module:'Missed calls',query:'Pending dial-back for inbound missed'},
+ {id:'h4',title:'Created Auto-Renewal Lapsed campaign',tag:'create',tagLabel:'Create',time:'Yesterday, 11:30 AM',module:'New campaign',query:'Win-back lapsed renewal customers'},
+ {id:'h5',title:'Needs attention: stalled campaigns',tag:'alert',tagLabel:'Alert',time:'Jun 23, 02:10 PM',module:'Needs attention',query:'Stalled or below 60% connect'},
+ {id:'h6',title:'Lead summary by file',tag:'leads',tagLabel:'Leads',time:'Jun 23, 10:50 AM',module:'Lead summary',query:'Leads ingested today, dialled vs pending'},
+ {id:'h7',title:'Rechurn Renewal Reminders by disposition',tag:'monitor',tagLabel:'Monitor',time:'Jun 22, 03:45 PM',module:'Running campaigns',query:'Retry callback + interested leads'},
+ {id:'h8',title:'Boosted Early Collections records',tag:'monitor',tagLabel:'Monitor',time:'Jun 22, 11:00 AM',module:'Running campaigns',query:'Priority boost for front-of-queue dialing'},
+ {id:'h9',title:'Set benchmark criteria to RPC 55%',tag:'diagnose',tagLabel:'Diagnose',time:'Jun 21, 09:30 AM',module:'Below benchmark',query:'Adjusted underperforming threshold'},
+ {id:'h10',title:'Created Broadband Upsell campaign',tag:'create',tagLabel:'Create',time:'Jun 20, 02:15 PM',module:'New campaign',query:'Clone from Cross-sell Mobile'},
+];
+let histOpen=false;
+function renderHistory(q){
+ const list=document.getElementById('histlist');
+ const filt=q?(HISTORY_DATA.filter(h=>h.title.toLowerCase().includes(q.toLowerCase())||h.module.toLowerCase().includes(q.toLowerCase()))):HISTORY_DATA;
+ list.innerHTML=filt.map(h=>`<div class="hist-item" data-id="${h.id}">
+   <div class="hi-title">${h.title}</div>
+   <div class="hi-meta"><span class="hi-tag ${h.tag}">${h.tagLabel}</span><span>${h.time}</span></div>
+ </div>`).join('')||(q?'<div style="padding:14px;color:var(--faint);font-size:12px;text-align:center">No history matches "'+q+'"</div>':'');
+ list.querySelectorAll('.hist-item').forEach(el=>{el.onclick=()=>{
+   const h=HISTORY_DATA.find(x=>x.id===el.dataset.id); if(!h)return;
+   toggleHistory(false);
+   addHistoryEntry(h.module,h.query,h.tagLabel);
+ };});
+}
+function addHistoryEntry(module,query,tag){
+ showToast('Loaded: '+module);
+}
+function toggleHistory(force){
+ const pane=document.getElementById('histpane'), btn=document.getElementById('histtoggle');
+ histOpen=force!==undefined?force:!histOpen;
+ if(histOpen){pane.classList.add('open');btn.classList.add('on');renderHistory('');}
+ else{pane.classList.remove('open');btn.classList.remove('on');}
+}
+document.getElementById('histtoggle').onclick=()=>toggleHistory();
+document.getElementById('histclose').onclick=()=>toggleHistory(false);
+document.getElementById('histsearch').oninput=function(){renderHistory(this.value);};
+
+/* ===== Suggestions overlay ===== */
+const MODULE_SUGGESTIONS={
+ 'running':[
+   {text:'Show segment details for the active campaign',icon:'donut',tag:'Drill-down'},
+   {text:'Rechurn leads that hit voicemail',icon:'refresh',tag:'Action'},
+   {text:'Boost underperforming records to front of queue',icon:'bolt',tag:'Action'},
+   {text:'Compare connect rate across all running campaigns',icon:'bars',tag:'Analysis'},
+   {text:'Show agent availability and call distribution',icon:'people',tag:'Agents'},
+ ],
+ 'under':[
+   {text:'Get recommendation for all underperforming campaigns',icon:'spark',tag:'Recommend'},
+   {text:'Rechurn the worst performing campaign',icon:'refresh',tag:'Action'},
+   {text:'Adjust pacing on low connect campaigns',icon:'dialer',tag:'Action'},
+   {text:'Change benchmark criteria metric or threshold',icon:'gear',tag:'Settings'},
+   {text:'Show telephony outcome breakdown for flagged campaigns',icon:'phone',tag:'Analysis'},
+ ],
+ 'attention':[
+   {text:'Resume all stalled campaigns with no dials',icon:'bolt',tag:'Action'},
+   {text:'Get recommendation for campaigns needing attention',icon:'spark',tag:'Recommend'},
+   {text:'Pause campaigns below 40% connect rate',icon:'bell',tag:'Action'},
+   {text:'Boost and rechurn low-connect campaigns',icon:'refresh',tag:'Action'},
+   {text:'Show lead status for stalled campaigns',icon:'donut',tag:'Analysis'},
+ ],
+ 'missed':[
+   {text:'Show pending dial-backs with no attempts',icon:'phone',tag:'Urgent'},
+   {text:'Schedule dial-back for all pending missed calls',icon:'cal',tag:'Action'},
+   {text:'View reconnect rate trend over last 7 days',icon:'bars',tag:'Analysis'},
+   {text:'Assign pending missed calls to available agents',icon:'people',tag:'Action'},
+ ],
+ 'leads':[
+   {text:'View leads by campaign with full call detail',icon:'donut',tag:'Drill-down'},
+   {text:'View leads by ingestion file',icon:'bars',tag:'Drill-down'},
+   {text:'Rechurn leads with voicemail or busy status',icon:'refresh',tag:'Action'},
+   {text:'Boost priority for fresh undialled leads',icon:'bolt',tag:'Action'},
+   {text:'Show lead ingestion trend for this week',icon:'bars',tag:'Analysis'},
+ ],
+ 'create':[
+   {text:'Clone an existing campaign with its settings',icon:'refresh',tag:'Clone'},
+   {text:'Build campaign from a use case description',icon:'spark',tag:'Use case'},
+   {text:'Create a blank campaign from scratch',icon:'plus',tag:'New'},
+   {text:'Add segment to the newly created campaign',icon:'donut',tag:'Segment'},
+ ],
+};
+const SUB_AGENTS={
+ 'running':['Analyst'],
+ 'under':['Analyst','Advisor'],
+ 'attention':['Analyst'],
+ 'missed':['Analyst'],
+ 'leads':['Analyst'],
+ 'create':['Analyst','Builder'],
+};
+const MODULE_QUERIES={
+ 'running':'Fetching all actively dialling campaigns with live call metrics',
+ 'under':'Ranking campaigns below connect rate benchmark, worst first',
+ 'attention':'Scanning for stalled or critically underperforming campaigns',
+ 'missed':'Pulling inbound missed calls and agent dial-back status',
+ 'leads':'Rolling up lead ingestion, dialling progress and pending count',
+ 'create':'Opening the campaign builder with templates and modules',
+};
+let sugOverlayOpen=false, currentModule=null;
+function showSuggestions(moduleKey){
+ currentModule=moduleKey;
+ const sugs=MODULE_SUGGESTIONS[moduleKey]||[];
+ if(!sugs.length) return;
+ // Remove any existing inline suggestions
+ body.querySelectorAll('.cp-inline-sugs').forEach(e=>e.remove());
+ const visible=sugs.slice(0,3), rest=sugs.slice(3);
+ const wrap=document.createElement('div');wrap.className='cp-inline-sugs';
+ // Render the first 3 chips
+ visible.forEach((s,i)=>{
+   const chip=document.createElement('button');chip.className='sug-chip';chip.textContent=s.text;
+   chip.onclick=()=>{const inp=document.getElementById('cpInput');if(inp){inp.value=s.text;send();}};
+   wrap.appendChild(chip);
+ });
+ // "More Suggestions" button + dropdown
+ if(rest.length || visible.length){
+   const moreBtn=document.createElement('button');moreBtn.className='cp-more-btn';
+   moreBtn.innerHTML='More Suggestions <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>';
+   const dropWrap=document.createElement('div');dropWrap.className='cp-more-drop';
+   const searchDiv=document.createElement('div');searchDiv.className='md-search';
+   const searchInp=document.createElement('input');searchInp.type='text';searchInp.placeholder='Search suggestions';
+   searchDiv.appendChild(searchInp);dropWrap.appendChild(searchDiv);
+   const listDiv=document.createElement('div');listDiv.className='md-list';
+   dropWrap.appendChild(listDiv);
+   function renderDropItems(q){
+     const all=MODULE_SUGGESTIONS[currentModule]||[];
+     const filt=q?all.filter(s=>s.text.toLowerCase().includes(q.toLowerCase())):all;
+     listDiv.innerHTML=filt.map(s=>`<div class="md-item">${s.text}</div>`).join('')
+       ||(q?'<div style="padding:10px;color:var(--faint);font-size:12px;text-align:center">No suggestions match</div>':'');
+     listDiv.querySelectorAll('.md-item').forEach((el,i)=>{el.onclick=()=>{
+       const inp=document.getElementById('cpInput');if(inp){inp.value=filt[i]?.text||'';send();}
+     };});
+   }
+   renderDropItems('');
+   searchInp.oninput=function(){renderDropItems(this.value);};
+   moreBtn.onclick=()=>{
+     const isOpen=dropWrap.classList.toggle('open');
+     moreBtn.classList.toggle('open',isOpen);
+     if(isOpen){searchInp.value='';renderDropItems('');setTimeout(()=>searchInp.focus(),60);}
+   };
+   wrap.appendChild(moreBtn);
+   wrap.appendChild(dropWrap);
+ }
+ body.appendChild(wrap);scroll();
+}
+function closeSuggestions(){body.querySelectorAll('.cp-inline-sugs').forEach(e=>e.remove());sugOverlayOpen=false;}
 function openCop(){drawer.classList.add('open');scrim.classList.add('show');document.getElementById('copopen').classList.remove('pulse');if(!body.childElementCount)start();}
 function closeCop(){drawer.classList.remove('open');scrim.classList.remove('show');}
 document.getElementById('copopen').onclick=openCop;document.getElementById('copclose').onclick=closeCop;scrim.onclick=closeCop;
@@ -569,7 +800,13 @@ document.getElementById('cophome').onclick=function(){ if(!cpBusy) start(); };
 function userMsg(t){const d=document.createElement('div');d.className='msg user';d.innerHTML=`<div class="b">${t}</div>`;body.appendChild(d);scroll();}
 function clearFoot(){foot.innerHTML='';}
 async function typing(){const t=document.createElement('div');t.className='typing';t.innerHTML='<span></span><span></span><span></span>';body.appendChild(t);scroll();await wait(700);t.remove();}
-async function toolCall(n,d,v){const e=document.createElement('div');e.className='tool';e.innerHTML=`<div class="sp"></div><div><span class="nm">${n}</span> <span class="ds">${d}</span></div>${v?'<span class="vtag">vision</span>':''}`;body.appendChild(e);scroll();await wait(920);e.classList.add('done');await wait(320);}
+async function toolCall(n,d,v){
+ const agEl=document.getElementById('cpsubagent');
+ const agHtml=agEl&&agEl.style.display!=='none'?agEl.innerHTML:'';
+ const e=document.createElement('div');e.className='tool';
+ e.innerHTML=`<div class="sp"></div><div><span class="nm">${n}</span> <span class="ds">${d}</span>${agHtml?'<div class="tool-agents">'+agHtml+'</div>':''}</div>${v?'<span class="vtag">vision</span>':''}`;
+ body.appendChild(e);scroll();await wait(920);e.classList.add('done');await wait(320);
+}
 async function botMsg(t){const d=document.createElement('div');d.className='msg bot';d.innerHTML=`<div class="mk">${I.aimark}</div><div class="bc"><div class="b"></div></div>`;body.appendChild(d);const b=d.querySelector('.b');const w=t.split(' ');for(let i=0;i<w.length;i++){b.innerHTML+=(i?' ':'')+w[i];if(i%2===0)await wait(24);scroll();}}
 function botWidget(title,rows){const max=Math.max(...rows.map(r=>r.val));const d=document.createElement('div');d.className='msg bot';let h=`<div class="mk">${I.aimark}</div><div class="bc"><div class="b"><div class="wdg"><div class="wt">${title}</div>`;rows.forEach(r=>{h+=`<div class="brow"><span class="bl">${r.label}</span><span class="bbar"><i style="width:${Math.max(6,Math.round(r.val/max*100))}%;background:${r.color}"></i></span><span class="bv">${r.val.toLocaleString()}</span></div>`;});d.innerHTML=h+`</div></div></div>`;body.appendChild(d);scroll();}
 function guard(t){const d=document.createElement('div');d.className='guard';d.innerHTML=`<span>⚠</span> ${t}`;body.appendChild(d);scroll();}
@@ -626,7 +863,29 @@ function matchCampaigns(txt){const toks=filterTokens(txt);if(!toks.length)return
 function outcomes(c){const nc=c.dialled-c.connected;const vm=Math.round(nc*0.61);const bz=Math.round(nc*0.25);const un=nc-vm-bz;return {dialled:c.dialled,connected:c.connected,noConnect:nc,voicemail:vm,busy:bz,unreachable:un,eligible:vm+bz,rate:(c.connected/c.dialled*100).toFixed(1)};}
 function refocus(){const ni=document.getElementById('cpInput');if(ni){setTimeout(()=>ni.focus(),40);}}
 function botBlock(inner){const d=document.createElement('div');d.className='msg bot';d.innerHTML=`<div class="mk">${I.aimark}</div><div class="bc"><div class="b">${inner}</div></div>`;body.appendChild(d);scroll();return d;}
-function renderCampaignList(list){const arr=list||ACTIVE;const COL=[{c:'#00bae9',bg:'#e6f7fd'},{c:'#1ba672',bg:'#e6f6ef'},{c:'#faa21b',bg:'#fef3e2'},{c:'#108acc',bg:'#e7f3fb'}];let h='<div class="camplist">';arr.forEach((c,i)=>{const k=COL[i%COL.length];const dialled=c.dialled||0;const cov=Math.round(dialled/c.total*100);const conn=dialled?Math.round(c.connected/dialled*100):0;const pills=dialled?`<span class="cpill grey">${c.total.toLocaleString()} leads</span><span class="cpill dialled">${dialled.toLocaleString()} dialled · ${cov}% of leads</span><span class="cpill connected">${c.connected.toLocaleString()} connected · ${conn}% of dialled</span>`:`<span class="cpill grey">${c.total.toLocaleString()} leads</span><span class="cpill grey">Not started</span>`;h+=`<button class="camprow" data-i="${i}" style="--ac:${k.c}"><div class="head"><div class="cn">${c.name}</div><span class="chev">›</span></div><div class="cpills">${pills}</div></button>`;});h+='</div>';const d=botBlock(h);d.classList.add('wide');d.querySelectorAll('.camprow').forEach(b=>{b.onclick=()=>chooseCampaign(arr[+b.dataset.i]);});}
+function fullBlock(inner){const d=document.createElement('div');d.className='msg bot wide';d.style.maxWidth='100%';d.innerHTML=`<div class="bc" style="width:100%"><div class="b" style="padding:0">${inner}</div></div>`;body.appendChild(d);scroll();return d;}
+function renderCampaignList(list){const arr=list||ACTIVE;
+ let h='<div class="segwrap" style="margin-top:6px"><table class="segtbl"><thead><tr><th>Campaign</th><th class="r">Total</th><th class="r">Dialled</th><th class="r">Dial %</th><th class="r">Connected</th><th class="r">Connect %</th><th class="r">Fresh</th><th class="r">Retried</th><th class="r">Agents</th><th>Dialer</th></tr></thead><tbody>';
+ arr.forEach((c,i)=>{
+   const dialled=c.dialled||0, cov=c.total?Math.round(dialled/c.total*100):0, conn=dialled?Math.round(c.connected/dialled*100):0;
+   const connCls=conn>=60?'active':conn>=40?'paused':'stopped';
+   const d=campDetail(c), fresh=d.fresh, retried=d.retried;
+   h+=`<tr class="camprow-tbl" data-i="${i}" style="cursor:pointer">
+     <td class="sgn" style="color:var(--cyandk);font-weight:700">${c.name}</td>
+     <td class="r">${c.total.toLocaleString()}</td>
+     <td class="r">${dialled?dialled.toLocaleString():'<span class="mut">0</span>'}</td>
+     <td class="r">${dialled?cov+'%':'<span class="mut">--</span>'}</td>
+     <td class="r">${c.connected?c.connected.toLocaleString():'<span class="mut">0</span>'}</td>
+     <td class="r"><span class="pill ${connCls}">${dialled?conn+'%':'--'}</span></td>
+     <td class="r">${fresh.toLocaleString()}</td>
+     <td class="r">${retried.toLocaleString()}</td>
+     <td class="r">${d.avail} <span class="mut">/ ${d.online}</span></td>
+     <td>${d.prof}</td></tr>`;
+ });
+ h+='</tbody></table></div>';
+ const d=botBlock(h);d.classList.add('wide');
+ d.querySelectorAll('.camprow-tbl').forEach(b=>{b.onclick=()=>chooseCampaign(arr[+b.dataset.i]);});
+}
 async function stepList(){await typing();await toolCall("Reporting fetch","counts active campaigns across the account");await botMsg(`Of your ${TOTAL} campaigns, ${ACTIVE.length} are dialling right now. Tap one to dive in, or ask me to filter — for example, “show me all renewal campaigns”.`);renderCampaignList(ACTIVE);}
 async function stepFilter(r){await typing();await toolCall("Reporting fetch",`searches all ${TOTAL} campaigns for “${r.toks.join(' ')}”`);await botMsg(`Of your ${TOTAL} campaigns, ${r.matches.length} match “${r.toks.join(' ')}”. Tap one to dive in.`);renderCampaignList(r.matches);}
 async function stepNoMatch(r){await typing();await toolCall("Reporting fetch",`searches all ${TOTAL} campaigns`);await botMsg(`I searched all ${TOTAL} campaigns but found none matching “${r?r.toks.join(' '):'that'}”. Try a theme like renewal, win-back, collections, upsell or loyalty.`);}
@@ -648,6 +907,8 @@ function fmtMetric(c,metric){const v=metricVal(c,metric);return metric.indexOf('
 function criteriaLink(view){const cl=document.createElement('button');cl.className='backlink';cl.textContent='⚙ Set criteria';cl.onclick=()=>{if(!cpBusy)setCriteria(view);};body.appendChild(cl);scroll();}
 async function stepUnderperforming(){
  const cr=critUnder;
+ setQuery('Ranking campaigns below '+cr.metric+' '+critFmt(cr)+' benchmark');
+ setSubAgent(['Analyst','Advisor']);
  await typing();await toolCall("Reporting fetch",`ranks all ${TOTAL} campaigns by ${cr.metric}`);
  const list=CATALOG.filter(c=>c.dialled>0&&metricVal(c,cr.metric)<cr.value).sort((a,b)=>metricVal(a,cr.metric)-metricVal(b,cr.metric));
  await botMsg(`${list.length} campaigns are below your benchmark of ${cr.metric} ${critFmt(cr)}, worst first. Tap one to dive in, or get a recommendation and act.`);
@@ -655,6 +916,8 @@ async function stepUnderperforming(){
 }
 async function stepAttention(){
  const cr=critAttn;
+ setQuery('Scanning for stalled campaigns and those below '+cr.metric);
+ setSubAgent(['Analyst']);
  await typing();await toolCall("Campaign Monitoring",`flags stalled campaigns and those below ${cr.metric}`);
  const list=CATALOG.filter(c=>c.dialled===0||metricVal(c,cr.metric)<cr.value);
  await botMsg(`${list.length} campaigns need attention now, either stalled with no dials or below your ${cr.metric} criteria (${critFmt(cr)}). Tap one to dive in, or get a recommendation and act.`);
@@ -677,6 +940,8 @@ function recFor(c,isU){
 async function viewReco(view,list){
  if(cpBusy)return;cpBusy=true;userMsg('Recommendation');
  const isU=view!=='attention', cr=isU?critUnder:critAttn;
+ setQuery('Analysing flagged campaigns and the best next move');
+ setSubAgent(['Analyst','Advisor']);
  await typing();await toolCall("Reporting fetch","analyses the flagged campaigns and the best next move");
  const rows=list.slice(0,6).map(c=>{const r=recFor(c,isU);return `<tr><td class="rl">${c.name}</td><td class="r">${(c.dialled||0)===0?'<span class="mut">stalled</span>':fmtMetric(c,cr.metric)}</td><td>${r.act}<span class="recb go">act</span></td><td class="mut">${r.why}</td></tr>`;}).join('');
  botBlock(`<div class="wdg"><div class="wt">Recommendation · ${isU?'below benchmark':'needs attention'}</div>
@@ -737,37 +1002,170 @@ const CAMPCFG={
  default:{plan:'Default',retry:'Outbound Retry Strategy',daily:3,weekly:8,supp:'DND',hours:'9 AM - 6 PM'}
 };
 function inferType(name){const n=(name||'').toLowerCase();if(/renew/.test(n))return'renewal';if(/win.?back/.test(n))return'winback';if(/collect/.test(n))return'collections';if(/upsell|cross.?sell|upgrade/.test(n))return'upsell';return'default';}
+// campaign setting modules
+const BIZHOURS=['9 AM - 6 PM','10 AM - 7 PM','8 AM - 8 PM','9 AM - 1 PM'];
+const DIALPLANS=['Default','TRAI-1600 safe','DND-filtered','After-hours'];
+let RETRYS=['Outbound Retry Strategy','Renewal Retry v2','Win-back Retry','Collections Retry','Upsell Retry'];
+const DIALERS=['Predictive','Progressive','Preview'];
+const PCWS=['Disposition + Notes','None','Survey','Callback scheduler'];
+const ACWS=['0s','15s','30s','45s','60s'];
+let SUPPS=['DND','DND + Renewal-DNC','DND + Legal-hold','None'];
+const AMDPOL=['Hang up on machine','Leave voicemail','Transfer to agent'];
+const SEGTYPES=['Dynamic','Static','Priority-ranked'];
+function fullCfg(type){const b=CAMPCFG[type]||CAMPCFG.default;return {hours:b.hours,plan:b.plan,retry:b.retry,dialer:'Predictive',pcw:'Disposition + Notes',acw:'30s',daily:b.daily,weekly:b.weekly,max:b.weekly+4,supp:b.supp,amd:true,earlymedia:false,amdpolicy:'Hang up on machine',segtype:'Dynamic'};}
+const inpNum='style="width:80px;border:1px solid var(--line);border-radius:8px;padding:6px 8px;font-family:inherit;font-size:12.5px;text-align:right"';
+function selRow(label,cls,opts,val,mod){return `<div class="rcctl"><label>${label}</label><select class="${cls}"${mod?` data-mod="${mod}"`:''}>${opts.map(o=>`<option${o===val?' selected':''}>${o}</option>`).join('')}</select></div>`;}
+function numRow(label,cls,val){return `<div class="rcctl"><label>${label}</label><input type="number" class="${cls}" min="0" value="${val}" ${inpNum}></div>`;}
+function settingsForm(cfg){return selRow('Business hours','cfHours',BIZHOURS,cfg.hours,'hours')+selRow('Dial plan','cfPlan',DIALPLANS,cfg.plan,'plan')+selRow('Retry strategy','cfRetry',RETRYS,cfg.retry,'retry')+selRow('Dialer','cfDialer',DIALERS,cfg.dialer,'dialer')+selRow('Post call workflow','cfPcw',PCWS,cfg.pcw,'pcw')+selRow('ACW','cfAcw',ACWS,cfg.acw,'acw')+numRow('Daily attempts','cfDaily',cfg.daily)+numRow('Weekly attempts','cfWeekly',cfg.weekly)+numRow('Max attempts','cfMax',cfg.max)+selRow('Suppression list','cfSupp',SUPPS,cfg.supp,'supp')+`<div class="rcctl"><label>AMD</label><input type="checkbox" class="cfAmd" ${cfg.amd?'checked':''}><span style="color:var(--faint);font-size:11.5px">Answering machine detection</span></div><div class="amdsub" style="${cfg.amd?'':'display:none'}">`+`<div class="rcctl"><label>Early media</label><input type="checkbox" class="cfEm" ${cfg.earlymedia?'checked':''}></div>`+selRow('AMD policy','cfAmdPol',AMDPOL,cfg.amdpolicy,'amdpolicy')+`</div>`+selRow('Segment type','cfSeg',SEGTYPES,cfg.segtype,'segtype');}
+const RETRYINFO={'Outbound Retry Strategy':{vm:'+2 hrs',busy:'+30 min',inv:'no retry',oth:'+2 hrs'},'Renewal Retry v2':{vm:'+5 hrs',busy:'+30 min',inv:'no retry',oth:'+2 hrs'},'Win-back Retry':{vm:'+3 hrs',busy:'+20 min',inv:'no retry',oth:'+90 min'},'Collections Retry':{vm:'+4 hrs',busy:'+15 min',inv:'no retry',oth:'+2 hrs'},'Upsell Retry':{vm:'+6 hrs',busy:'+45 min',inv:'no retry',oth:'+3 hrs'}};
+function renderModInfo(info,mod,value){
+ let rows;
+ if(mod==='retry'){const r=RETRYINFO[value]||{vm:'+2 hrs',busy:'+30 min',inv:'no retry',oth:'+2 hrs'};rows=[['Strategy',value],['Voicemail',r.vm],['Busy',r.busy],['Invalid',r.inv],['Others',r.oth]];}
+ else if(mod==='hours'){rows=[['Window',value],['Days','Mon - Fri'],['Time zone','IST'],['Holidays','skipped']];}
+ else if(mod==='plan'){rows=[['Plan',value],['Caller ID',value.indexOf('1600')>=0?'1600 series':'Default DID'],['DND check',value.indexOf('DND')>=0?'on':'standard'],['Window',value.indexOf('After')>=0?'after hours':'9 AM - 9 PM']];}
+ else if(mod==='dialer'){const p={Predictive:'2.5:1',Progressive:'1:1',Preview:'manual'}[value]||'1:1';rows=[['Mode',value],['Pacing',p],['Abandon cap','3%']];}
+ else if(mod==='supp'){rows=[['List',value],['DND',value.indexOf('DND')>=0?'included':'no'],['Custom',value.indexOf('+')>=0?value.split('+')[1].trim():'none']];}
+ else if(mod==='pcw'){rows=[['Workflow',value],['Trigger','on call end']];}
+ else if(mod==='acw'){rows=[['Wrap time',value],['Auto-ready','after timer']];}
+ else if(mod==='amdpolicy'){rows=[['On machine',value]];}
+ else if(mod==='segtype'){rows=[['Type',value],['Refresh',value==='Dynamic'?'continuous':'on load']];}
+ else rows=[['Module',value]];
+ info.innerHTML=`<table class="rectbl">${rows.map(r=>`<tr><td class="rl">${r[0]}</td><td class="r">${r[1]}</td></tr>`).join('')}</table>`;
+}
+function wireAmd(root){const a=root.querySelector('.cfAmd'),sub=root.querySelector('.amdsub');if(a&&sub)a.onchange=()=>{sub.style.display=a.checked?'':'none';};}
+function readCfg(root){const g=c=>{const e=root.querySelector('.'+c);return e?e.value:'';};const ck=c=>{const e=root.querySelector('.'+c);return e?e.checked:false;};return {hours:g('cfHours'),plan:g('cfPlan'),retry:g('cfRetry'),dialer:g('cfDialer'),pcw:g('cfPcw'),acw:g('cfAcw'),daily:g('cfDaily'),weekly:g('cfWeekly'),max:g('cfMax'),supp:g('cfSupp'),amd:ck('cfAmd'),earlymedia:ck('cfEm'),amdpolicy:g('cfAmdPol'),segtype:g('cfSeg')};}
+async function finishCreate(name,cfg,note){
+ showToast('Campaign created · '+name);
+ await botMsg(`Created ${name}. ${note||''} Dialer ${cfg.dialer}, ${cfg.plan} dial plan, ${cfg.retry}, ${cfg.daily}/day · ${cfg.weekly}/week · max ${cfg.max}, ${cfg.supp} suppression, ${cfg.hours}, ACW ${cfg.acw}, AMD ${cfg.amd?'on ('+cfg.amdpolicy+(cfg.earlymedia?', early media':'')+')':'off'}, ${cfg.segtype} segments. Now add segments.`);
+ stepSegments(name);
+}
 async function stepCreate(){
- await typing();await toolCall("Campaign setup","opens a new outbound campaign draft");
- await botMsg("Set up a new campaign. Anything you don't set is inherited from the campaign type in the name, so a renewal campaign picks up the renewal dial plan, retry strategy, attempts, suppression and business hours. You can also clone an existing campaign, segments are never cloned. The left panel previews everything before you create.");
- const id='nc'+(rcSeq++);
- const el=botBlock(`<div class="wdg" id="${id}"><div class="wt">New campaign</div>
-   <div class="nc2col">
-     <div class="ncprev"><div class="npt">Preview</div><div class="npbody"></div></div>
+ setQuery('Opening the campaign builder');
+ setSubAgent(['Analyst','Builder']);
+ await typing();await toolCall("Campaign setup","opens the campaign builder");
+ await botMsg("How do you want to start the campaign?");
+ const w=document.createElement('div');w.className='btnrow';w.style.marginTop='6px';w.style.flexWrap='wrap';
+ const mk=(label,kind,cls)=>{const b=document.createElement('button');b.className='btn '+cls;b.textContent=label;b.onclick=()=>{if(cpBusy)return;buildCampaign(kind);};return b;};
+ w.appendChild(mk('Clone a campaign','clone','go'));
+ w.appendChild(mk('Provide use case','usecase','alt'));
+ w.appendChild(mk('Create new campaign','new','alt'));
+ body.appendChild(w);scroll(); cpStage=9;
+}
+async function buildCampaign(mode){
+ if(cpBusy)return;cpBusy=true;
+ userMsg(mode==='clone'?'Clone a campaign':mode==='usecase'?'Provide use case':'Create new campaign');
+ await typing();await toolCall("Campaign setup","opens the "+mode+" builder");
+ const id='cb'+(rcSeq++), seedT=mode==='clone'?inferType(CATALOG[0].name):'default', cfg=fullCfg(seedT);
+ const cloneRow=mode==='clone'?`<div class="rcctl"><label>Clone from</label><select class="cbclone">${CATALOG.map(c=>`<option>${c.name}</option>`).join('')}</select></div>`:'';
+ const ucRow=mode==='usecase'?`<div class="rcctl"><label>Use case</label><input type="text" class="cbuc" placeholder="describe, then Apply" style="flex:1;border:1px solid var(--line);border-radius:8px;padding:7px 9px;font-family:inherit;font-size:12.5px;"><button class="btn alt cbapply" style="padding:6px 10px;flex:0 0 auto">Apply</button></div>`:'';
+ const el=botBlock(`<div class="wdg" id="${id}"><div class="wt">New campaign · ${mode==='clone'?'clone':mode==='usecase'?'use case':'new'}</div>
+   <div class="nc2col" style="grid-template-columns:1fr">
+     <div class="ncprev" style="display:none"><div class="npt">Module config</div><div class="modinfo"></div></div>
      <div class="ncform">
-       <div class="rcctl"><label>Name</label><input type="text" class="ncname" placeholder="e.g. Q3 Renewal Drive" style="flex:1;border:1px solid var(--line);border-radius:8px;padding:7px 9px;font-family:inherit;font-size:12.5px;"></div>
-       <div class="rcctl"><label>Clone from</label><select class="ncclone"><option>None</option>${CATALOG.map(c=>`<option>${c.name}</option>`).join('')}</select></div>
-       <div class="rcctl"><label>Dialer</label><select class="ncdial"><option>Predictive</option><option>Progressive</option><option>Preview</option></select></div>
-       <div class="rcctl"><label>Schedule</label><select class="ncwhen"><option>Now</option><option>Today 6 PM</option><option>Tomorrow 9 AM</option></select></div>
-       <button class="btn go ncgo" style="margin-top:11px">Create campaign</button>
+       <div class="rcctl"><label>Name</label><input type="text" class="cbname" placeholder="e.g. Q3 Renewal Drive" style="flex:1;border:1px solid var(--line);border-radius:8px;padding:7px 9px;font-family:inherit;font-size:12.5px;"></div>
+       ${cloneRow}${ucRow}
+       <div class="seglabel" style="margin-top:8px">Modules (editable)</div>
+       <div class="cbset"></div>
+       <button class="btn go cbgo" style="margin-top:11px">Save campaign</button>
      </div>
    </div></div>`);
  el.classList.add('wide');
+ const root=el.querySelector('#'+id), setBox=root.querySelector('.cbset'), info=root.querySelector('.modinfo'), ncprev=root.querySelector('.ncprev'), grid=root.querySelector('.nc2col'), clone=root.querySelector('.cbclone'), uc=root.querySelector('.cbuc');
+ function wireInfo(){ setBox.querySelectorAll('select[data-mod]').forEach(s=>{ const f=()=>{ ncprev.style.display=''; grid.style.gridTemplateColumns='1fr 1fr'; grid.classList.add('split'); renderModInfo(info,s.dataset.mod,s.value); }; s.onfocus=f; s.addEventListener('change',f); }); }
+ function paint(c){ setBox.innerHTML=settingsForm(c); wireAmd(setBox); wireInfo(); }
+ paint(cfg);
+ if(clone) clone.onchange=()=>{ paint(fullCfg(inferType(clone.value))); showToast('Loaded settings from '+clone.value); };
+ if(uc) root.querySelector('.cbapply').onclick=()=>{ const t=inferType(uc.value||''); paint(fullCfg(t)); showToast('Applied '+t+' config'); };
+ root.querySelector('.cbgo').onclick=async()=>{ if(cpBusy)return;cpBusy=true;
+   const nm=(root.querySelector('.cbname').value||'New campaign').trim(), c=readCfg(setBox);
+   const note=mode==='clone'?'Cloned from '+clone.value+', segments not copied.':mode==='usecase'?'From use case: '+(uc.value||'unspecified')+'.':'Built from scratch.';
+   const g=root.querySelector('.cbgo');g.disabled=true;g.textContent='Saved';g.style.opacity='.6';
+   await finishCreate(nm,c,note); cpBusy=false;refocus(); };
+ cpStage=9;cpBusy=false;refocus();
+}
+async function createExisting(){
+ if(cpBusy)return;cpBusy=true;userMsg('Use an existing campaign');
+ await typing();await botMsg("Clone an existing campaign's settings, or just tell me the use case and I'll set it up.");
+ const w=document.createElement('div');w.className='btnrow';w.style.marginTop='6px';
+ const a=document.createElement('button');a.className='btn go';a.textContent='Clone existing campaign';a.onclick=()=>{if(cpBusy)return;cloneFlow();};
+ const b=document.createElement('button');b.className='btn alt';b.textContent='Give use case';b.onclick=()=>{if(cpBusy)return;useCaseFlow();};
+ w.appendChild(a);w.appendChild(b);body.appendChild(w);scroll(); cpBusy=false;refocus();
+}
+async function cloneFlow(){
+ if(cpBusy)return;cpBusy=true;userMsg('Clone existing campaign');
+ await typing();await toolCall("Campaign setup","loads settings from the chosen campaign");
+ const id='cl'+(rcSeq++);
+ const el=botBlock(`<div class="wdg" id="${id}"><div class="wt">Clone campaign</div>
+   <div class="rcctl"><label>Clone from</label><select class="clsrc">${CATALOG.map(c=>`<option>${c.name}</option>`).join('')}</select></div>
+   <div class="rcctl"><label>New name</label><input type="text" class="clname" placeholder="e.g. Q3 Renewal Drive" style="flex:1;border:1px solid var(--line);border-radius:8px;padding:7px 9px;font-family:inherit;font-size:12.5px;"></div>
+   <div class="seglabel" style="margin-top:8px">Settings (editable · segments not cloned)</div>
+   <div class="clset"></div>
+   <button class="btn go clgo" style="margin-top:11px">Save campaign</button></div>`);
+ el.classList.add('wide');
+ const root=el.querySelector('#'+id), src=root.querySelector('.clsrc'), nameI=root.querySelector('.clname'), setBox=root.querySelector('.clset');
+ function fill(){ setBox.innerHTML=settingsForm(fullCfg(inferType(src.value))); wireAmd(setBox); }
+ src.onchange=fill; fill();
+ root.querySelector('.clgo').onclick=async()=>{ if(cpBusy)return;cpBusy=true;
+   const nm=(nameI.value||src.value+' (copy)').trim(), cfg=readCfg(setBox);
+   const g=root.querySelector('.clgo');g.disabled=true;g.textContent='Saved';g.style.opacity='.6';
+   await finishCreate(nm,cfg,'Cloned from '+src.value+', segments not copied.'); cpBusy=false;refocus(); };
+ cpStage=9;cpBusy=false;refocus();
+}
+async function useCaseFlow(){
+ if(cpBusy)return;cpBusy=true;userMsg('Give use case');
+ await typing();await botMsg("Describe the use case in a line, for example 'win back lapsed renewal customers'. I'll pick the modules and show the campaign before saving.");
+ const id='uc'+(rcSeq++);
+ const el=botBlock(`<div class="wdg" id="${id}"><div class="wt">Use case</div>
+   <div class="rcctl"><label>New name</label><input type="text" class="ucname" placeholder="e.g. Q3 Renewal Drive" style="flex:1;border:1px solid var(--line);border-radius:8px;padding:7px 9px;font-family:inherit;font-size:12.5px;"></div>
+   <div class="rcctl"><label>Use case</label><input type="text" class="ucdesc" placeholder="describe the campaign" style="flex:1;border:1px solid var(--line);border-radius:8px;padding:7px 9px;font-family:inherit;font-size:12.5px;"></div>
+   <button class="btn go ucgo" style="margin-top:11px">Build campaign</button></div>`);
+ el.classList.add('wide');
  const root=el.querySelector('#'+id);
- const nameI=root.querySelector('.ncname'), cloneS=root.querySelector('.ncclone'), dialS=root.querySelector('.ncdial'), whenS=root.querySelector('.ncwhen'), prev=root.querySelector('.npbody');
- const cfg=()=>{ const src=cloneS.value!=='None'?cloneS.value:nameI.value; const t=inferType(src); return Object.assign({t},CAMPCFG[t]); };
- function renderPrev(){ const c=cfg(), nm=nameI.value||'(unnamed)', cloned=cloneS.value!=='None';
-   prev.innerHTML=[['Name',nm],['Type',c.t],['Dialer',dialS.value],['Schedule',whenS.value],['Dial plan',c.plan],['Retry strategy',c.retry],['Daily attempts',c.daily],['Weekly attempts',c.weekly],['Suppression',c.supp],['Business hours',c.hours],['Segments',cloned?'not cloned, add after':'add after create']]
-     .map(r=>`<div class="nprow"><span>${r[0]}</span><b>${r[1]}</b></div>`).join('');
- }
- nameI.oninput=renderPrev; cloneS.onchange=renderPrev; dialS.onchange=renderPrev; whenS.onchange=renderPrev; renderPrev();
- root.querySelector('.ncgo').onclick=async()=>{ if(cpBusy)return;cpBusy=true;
-   const nm=(nameI.value||'New campaign').trim(), c=cfg();
-   showToast('Campaign created · '+nm);
-   await botMsg(`Created ${nm} (${c.t}) with ${dialS.value} dialer, ${c.plan} dial plan, ${c.retry}, ${c.daily}/day and ${c.weekly}/week attempts, ${c.supp} suppression, ${c.hours}.${cloneS.value!=='None'?' Cloned config from '+cloneS.value+', segments not copied.':''} Now add segments.`);
-   const g=root.querySelector('.ncgo');g.disabled=true;g.textContent='Campaign created';g.style.opacity='.6';
-   cpBusy=false; stepSegments(nm); };
- cpStage=9;
+ root.querySelector('.ucgo').onclick=async()=>{ if(cpBusy)return;cpBusy=true;
+   const nm=(root.querySelector('.ucname').value||'New campaign').trim(), desc=root.querySelector('.ucdesc').value||nm, t=inferType(desc), cfg=fullCfg(t);
+   const g=root.querySelector('.ucgo');g.disabled=true;g.style.opacity='.6';
+   await typing();await toolCall("Campaign setup","auto-selects modules for a "+t+" use case");
+   await botMsg(`Based on the use case I set this up as a ${t} campaign. Here's the campaign view, review and save.`);
+   showCampaignView(nm,t,cfg); cpBusy=false;refocus(); };
+ cpStage=9;cpBusy=false;refocus();
+}
+function showCampaignView(nm,t,cfg){
+ const rows=[['Name',nm],['Type',t],['Business hours',cfg.hours],['Dial plan',cfg.plan],['Retry strategy',cfg.retry],['Dialer',cfg.dialer],['Post call workflow',cfg.pcw],['ACW',cfg.acw],['Daily attempts',cfg.daily],['Weekly attempts',cfg.weekly],['Max attempts',cfg.max],['Suppression list',cfg.supp],['AMD',cfg.amd?'On · '+cfg.amdpolicy+(cfg.earlymedia?' · early media':''):'Off'],['Segment type',cfg.segtype]];
+ const id='cv'+(rcSeq++);
+ const el=botBlock(`<div class="wdg" id="${id}"><div class="wt">Campaign view · ${nm}</div><table class="rectbl">${rows.map(r=>`<tr><td class="rl">${r[0]}</td><td class="r">${r[1]}</td></tr>`).join('')}</table><button class="btn go cvgo" style="margin-top:11px">Save campaign</button></div>`);
+ el.classList.add('wide');
+ el.querySelector('.cvgo').onclick=async()=>{ if(cpBusy)return;cpBusy=true; const g=el.querySelector('.cvgo');g.disabled=true;g.textContent='Saved';g.style.opacity='.6'; await finishCreate(nm,cfg,'Auto-configured from the use case.'); cpBusy=false;refocus(); };
+}
+async function newFlow(){
+ if(cpBusy)return;cpBusy=true;userMsg('Create new entirely');
+ await typing();await toolCall("Campaign setup","opens a blank campaign");
+ const id='nf'+(rcSeq++), cfg=fullCfg('default');
+ const el=botBlock(`<div class="wdg" id="${id}"><div class="wt">New campaign</div>
+   <div class="nc2col">
+     <div class="ncprev"><div class="npt">Create module</div>
+       <button class="modbtn" data-m="retry">+ Retry strategy</button>
+       <button class="modbtn" data-m="plan">+ Dial plan</button>
+       <button class="modbtn" data-m="supp">+ Suppression list</button>
+       <div class="modnew"></div>
+     </div>
+     <div class="ncform">
+       <div class="rcctl"><label>Name</label><input type="text" class="nfname" placeholder="e.g. Q3 Renewal Drive" style="flex:1;border:1px solid var(--line);border-radius:8px;padding:7px 9px;font-family:inherit;font-size:12.5px;"></div>
+       <div class="nfset"></div>
+       <button class="btn go nfgo" style="margin-top:11px">Save campaign</button>
+     </div>
+   </div></div>`);
+ el.classList.add('wide');
+ const root=el.querySelector('#'+id), setBox=root.querySelector('.nfset'), modnew=root.querySelector('.modnew');
+ setBox.innerHTML=settingsForm(cfg); wireAmd(setBox);
+ root.querySelectorAll('.modbtn').forEach(b=>{ b.onclick=()=>addModule(b.dataset.m,setBox,modnew); });
+ root.querySelector('.nfgo').onclick=async()=>{ if(cpBusy)return;cpBusy=true; const nm=(root.querySelector('.nfname').value||'New campaign').trim(), c=readCfg(setBox); const g=root.querySelector('.nfgo');g.disabled=true;g.textContent='Saved';g.style.opacity='.6'; await finishCreate(nm,c,'Built from scratch.'); cpBusy=false;refocus(); };
+ cpStage=9;cpBusy=false;refocus();
+}
+function addModule(kind,setBox,modnew){
+ const map={retry:['Retry strategy',RETRYS,'cfRetry'],plan:['Dial plan',DIALPLANS,'cfPlan'],supp:['Suppression list',SUPPS,'cfSupp']}, m=map[kind], id='mn'+(rcSeq++);
+ modnew.innerHTML=`<div class="rcctl" style="margin-top:8px"><input type="text" id="${id}" placeholder="new ${m[0].toLowerCase()}" style="flex:1;border:1px solid var(--line);border-radius:8px;padding:6px 8px;font-family:inherit;font-size:12px;"><button class="btn go" style="padding:6px 10px" id="${id}b">Add</button></div>`;
+ document.getElementById(id+'b').onclick=()=>{ const val=document.getElementById(id).value.trim(); if(!val)return; m[1].push(val);
+   const sel=setBox.querySelector('.'+m[2]); if(sel){ const o=document.createElement('option');o.textContent=val;o.selected=true;sel.appendChild(o); } modnew.innerHTML=''; showToast(m[0]+' added · '+val); };
 }
 function stepSegments(camp){
  const w=document.createElement('div');w.className='btnrow';w.style.marginTop='6px';
@@ -795,17 +1193,24 @@ async function launchCard(kind){
  if(cpBusy)return;
  const lp=body.querySelector('.cp-landing'); if(lp) lp.remove();
  cpBusy=true;
+ // Set scope, query, and sub-agent based on module
+ const scopeNames={running:'Running campaigns',under:'Below benchmark',attention:'Needs attention',missed:'Missed calls',leads:'Lead summary',create:'New campaign'};
+ setScope('Scope: '+(scopeNames[kind]||'all campaigns'));
+ setQuery(MODULE_QUERIES[kind]||'');
+ setSubAgent(SUB_AGENTS[kind]||null);
  if(kind==='running'){userMsg('Show all running campaigns');await stepList();cpStage=1;}
  else if(kind==='under'){userMsg('Show campaigns not performing up to standard');await stepUnderperforming();cpStage=1;}
  else if(kind==='attention'){userMsg('Show campaigns that need my immediate attention');await stepAttention();cpStage=1;}
  else if(kind==='missed'){userMsg('Show missed calls');await stepMissed();cpStage=9;}
  else if(kind==='leads'){userMsg('Lead summary');await stepLeadSummary();cpStage=9;}
  else if(kind==='create'){userMsg('Create a new campaign');await stepCreate();cpStage=9;}
+ // Show suggestions AFTER content is rendered
+ showSuggestions(kind);
  cpBusy=false;refocus();
 }
 // back to the running-campaigns list from any campaign/segment scope
 async function goAllCampaigns(){
- if(cpBusy)return;cpBusy=true;chosen=null;setScope('Scope: all campaigns');
+ if(cpBusy)return;cpBusy=true;chosen=null;resetCtx();closeSuggestions();
  userMsg('Back to all campaigns');await stepList();cpStage=1;cpBusy=false;refocus();
 }
 // missed-call records: inbound missed and the agent dial-back attempts
@@ -819,6 +1224,8 @@ const MISSED=[
  {assignee:'Arjun Patel',phone:'+91 96•••33820',agent:'Olivia Martin',missed:'11:39',connT:'—',schedT:'16:00',attempts:2,result:'No answer'}
 ];
 async function stepMissed(){
+ setQuery('Reading inbound missed calls and agent dial-back attempts');
+ setSubAgent(['Analyst']);
  await typing();await toolCall("Campaign Monitoring","reads inbound missed calls and agent dial-back attempts");
  const recv=MISSED.length, dialed=MISSED.filter(r=>r.attempts>0).length, conn=MISSED.filter(r=>r.result==='Connected').length, pend=MISSED.filter(r=>r.result==='Pending').length;
  botBlock(`<div class="detcard"><div class="dt"><span class="cdot"></span>Missed calls today</div>
@@ -876,6 +1283,8 @@ const lpill=s=>({fresh:'processed',attempted:'paused',connected:'active',retry:'
 function emptyRow(n){return `<tr><td colspan="${n}" class="mut" style="padding:12px">No records match this filter.</td></tr>`;}
 
 async function stepLeadSummary(){
+ setQuery('Rolling up lead ingestion and dialing summary');
+ setSubAgent(['Analyst']);
  await typing();await toolCall("Manage Leads","rolls up lead ingestion and dialing");
  const id='ls'+(rcSeq++);
  const el=botBlock(`<div id="${id}"><div class="seglabel">Ingestion window</div><div class="daseg lsseg" style="flex-wrap:wrap"></div><div class="lscard" style="margin-top:10px"></div></div>`);
@@ -992,6 +1401,8 @@ function pickCampaignThen(fn,label){
 }
 async function boostEntry(c){
  if(cpBusy)return;cpBusy=true;setScope('Scope: '+c.name);userMsg('Boost record · '+c.name);
+ setQuery('Preparing priority boost for '+c.name);
+ setSubAgent(['Analyst','Builder']);
  await typing();await toolCall("Manage Leads","prepares a priority boost for "+c.name,true);
  const id='bo'+(rcSeq++);
  const el=botBlock(`<div class="wdg" id="${id}"><div class="wt">Boost record · ${c.name}</div>
@@ -1068,6 +1479,8 @@ function campSegments(c){
 }
 async function showSegments(c){
  if(cpBusy)return; cpBusy=true; userMsg('Show segment details');
+ setQuery('Reading segment-level breakdown for '+c.name);
+ setSubAgent(['Analyst']);
  await typing(); await toolCall("Reporting fetch","reads segment-level data for "+c.name);
  const segs=campSegments(c);
  await botMsg(`${c.name} has ${segs.length} segments. Here they are with status, reach and operational detail. Tap Telephony on any row to scope an action to that segment.`);
@@ -1166,6 +1579,9 @@ function dispRows(d){return d.rows.map(r=>({key:r.key,label:r.label,count:r.coun
 async function runRechurnEntry(m,silent){
  if(cpBusy)return;cpBusy=true;
  setScope('Scope: '+m.name+(m.kind==='segment'?' (segment)':''));
+ setQuery('Selecting derived attribute for rechurn action');
+ setSubAgent(['Analyst','Advisor','Builder']);
+ closeSuggestions();
  if(!silent)userMsg('Rechurn · '+m.name);
  await typing();await botMsg(`Rechurn on ${m.name}. Pick the derived attribute to work from.`);
  const id='da'+(rcSeq++);
@@ -1184,6 +1600,8 @@ async function runRechurnEntry(m,silent){
 
 async function showTelephony(m){
  if(cpBusy)return;cpBusy=true;
+ setQuery('Reading telephony outcomes for '+m.name);
+ setSubAgent(['Analyst','Advisor']);
  await typing();await toolCall("Campaign Monitoring","reads telephony outcomes "+(m.kind==='segment'?'for this segment':'for this campaign'));
  const t=telephony(m);
  const rowsHtml=t.rows.map(r=>`<tr><td class="rl">${r.label}</td><td class="r">${r.count.toLocaleString()}</td><td class="r mut">${t.nc?Math.round(r.count/t.nc*100):0}%</td></tr>`).join('');
@@ -1197,6 +1615,8 @@ async function showTelephony(m){
 
 async function runReco(m,t){
  if(cpBusy)return;cpBusy=true;userMsg('Recommendation');
+ setQuery('Analysing retry strategy and pacing for '+m.name);
+ setSubAgent(['Analyst','Advisor']);
  await typing();await toolCall("Retry strategy","reads Outbound Retry Strategy attached to "+m.name);
  const cap=Math.max(40,Math.round(m.avail*PACING*18)); // approx dial attempts/hr at current pacing (concept)
  const pct={voicemail:0.5,busy:1,drop:0.8,noans:0.7,invalid:0};
@@ -1220,6 +1640,8 @@ async function runReco(m,t){
 
 async function showDisposition(m){
  if(cpBusy)return;cpBusy=true;
+ setQuery('Reading connected-call dispositions for '+m.name);
+ setSubAgent(['Analyst','Advisor']);
  await typing();await toolCall("Campaign Monitoring","reads connected-call dispositions "+(m.kind==='segment'?'for this segment':'for this campaign'));
  const d=disposition(m);
  const rowsHtml=d.rows.map(r=>`<tr><td class="rl">${r.label}</td><td class="r">${r.count.toLocaleString()}</td><td>${r.route}</td><td class="r mut">${d.cn?Math.round(r.count/d.cn*100):0}%</td></tr>`).join('');
@@ -1233,6 +1655,8 @@ async function showDisposition(m){
 
 async function dispoReco(m,d){
  if(cpBusy)return;cpBusy=true;userMsg('Recommendation');
+ setQuery('Checking supervisor and senior-agent fit for '+m.name);
+ setSubAgent(['Analyst','Advisor']);
  await typing();await toolCall("Skill & routing","checks supervisor and senior-agent fit for "+m.name);
  const rowsHtml=d.rows.map(r=>{
    if(r.noRetry)return`<tr><td class="rl mut">${r.label}</td><td class="r mut">${r.count.toLocaleString()}</td><td>${r.route}</td><td><span class="mut">do not retry</span><span class="recb no">block</span></td></tr>`;
@@ -1319,7 +1743,7 @@ function campOptions(c){
  b2.onclick=()=>{ if(cpBusy)return; runRechurnEntry(scopeMeta(c,false)); };
  w.appendChild(b1); w.appendChild(b2); body.appendChild(w); scroll();
 }
-async function chooseCampaign(c){if(cpBusy)return;cpBusy=true;chosen=c;setScope('Scope: '+c.name);userMsg(c.name);await typing();await toolCall("Reporting fetch","reads campaign detail for "+c.name);renderCampaignDetail(c);await botMsg(`Here's where ${c.name} stands right now. Pick an option below, or tell me what to do.`);cpStage=2;campOptions(c);cpBusy=false;refocus();}
+async function chooseCampaign(c){if(cpBusy)return;cpBusy=true;chosen=c;setScope('Scope: '+c.name);setQuery('Viewing campaign detail and live call metrics');setSubAgent(['Analyst']);closeSuggestions();userMsg(c.name);await typing();await toolCall("Reporting fetch","reads campaign detail for "+c.name);await botMsg(`Here's where ${c.name} stands right now. Pick an option below, or tell me what to do.`);cpStage=2;campOptions(c);cpBusy=false;refocus();}
 async function stepReport(){const c=chosen,o=outcomes(c);await typing();await toolCall("Reporting fetch","reads lead-level data for "+c.name);await botMsg(`On ${c.name}: ${o.dialled.toLocaleString()} of ${c.total.toLocaleString()} leads dialled so far, ${o.connected.toLocaleString()} connected — a ${o.rate}% connect rate (connected of dialled). ${o.noConnect.toLocaleString()} dialled leads didn't connect.`);await typing();await toolCall("Reporting fetch","groups the "+o.noConnect.toLocaleString()+" leads by last telephony outcome");botWidget("Didn't connect · last telephony outcome",[{label:"Voicemail",val:o.voicemail,color:"#f59e0b"},{label:"Busy",val:o.busy,color:"#1250de"},{label:"Switched off / invalid",val:o.unreachable,color:"#c2ccd6"}]);await botMsg(`${o.voicemail.toLocaleString()} leads hit voicemail and ${o.busy.toLocaleString()} were busy, so ${o.eligible.toLocaleString()} leads are callable again. The ${o.unreachable.toLocaleString()} switched-off or invalid leads can't be rechurned, so I left them out.`);await botMsg("Basis: Campaign Monitoring, last telephony outcome.");guard(`Rechurning retries live leads, so I'll <b>confirm before I act</b>. Reply <b>rechurn</b> to retry all ${o.eligible.toLocaleString()} leads, or <b>schedule</b> for 6 PM.`);}
 async function stepRechurn(txt){const c=chosen,o=outcomes(c);const sched=/sched|later|6|pm|evening|tonight/i.test(txt);await typing();await toolCall("Rechurn · Manage Leads","retries the chosen leads by call outcome",true);rechurned.add(c.name);renderCampaigns();showToast("Rechurn "+(sched?"scheduled":"done")+" · "+o.eligible.toLocaleString()+" leads · captured in campaign audit trail");await botMsg(sched?`Scheduled. ${o.eligible.toLocaleString()} leads on ${c.name} will rechurn at 6 PM, set to Retry Scheduled. Captured in the campaign audit trail.`:`Done. ${o.eligible.toLocaleString()} leads on ${c.name} set to Retry Scheduled and rechurned by call outcome, voicemail and busy. Captured in the campaign audit trail.`);addAuditCard({what:`Rechurn · ${o.eligible.toLocaleString()} leads · ${c.name} · telephony outcome: voicemail, busy`,who:"Ajay Gaur · via Campaign Copilot",when:sched?"scheduled for 6:00 PM today":"just now"});botBlock('<div class="payoff"><b>From a question to done, in chat.</b><span class="small">The old way: open Manage Leads, filter by outcome, set the rechurn by hand.</span></div>');}
 async function send(){
@@ -1327,6 +1751,7 @@ async function send(){
  const inp=document.getElementById('cpInput'); if(!inp) return;
  const lp=body.querySelector('.cp-landing'); if(lp) lp.remove();
  body.querySelectorAll('.cp-sugs-inline').forEach(e=>e.remove());
+ body.querySelectorAll('.cp-inline-sugs').forEach(e=>e.remove());
  const v=(inp.value||'').trim();
  // keyword: "rechurn" opens the rechurn action for the selected campaign, else asks to pick one first
  if(/rechurn/i.test(v)){
@@ -1365,7 +1790,8 @@ const cpSuggest=["Which campaigns are running right now?","Show me all renewal c
 const cpDrill=["Give me the distribution of leads that are not connected per the telephony outcome"];
 function renderSugs(list){const d=document.createElement('div');d.className='cp-sugs cp-sugs-inline';d.innerHTML=list.map(s=>`<button class="sug">${s}</button>`).join('');body.appendChild(d);scroll();d.querySelectorAll('.sug').forEach((b,i)=>{b.onclick=()=>{const inp=document.getElementById('cpInput');if(inp)inp.value=list[i];send();};});}
 function start(){
- body.innerHTML='';setScope('Scope: all campaigns');cpStage=0;cpBusy=false;chosen=null;
+ body.innerHTML='';resetCtx();cpStage=0;cpBusy=false;chosen=null;
+ closeSuggestions();toggleHistory(false);
  renderInput(false);
  const l=document.createElement('div');l.className='cp-landing';
  const cards=[
